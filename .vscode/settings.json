@@ -1,0 +1,8 @@
+{
+    "python.pythonPath": "C:\\Users\\82066\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe",
+    "cSpell.words": [
+        "HBASE",
+        "htype"
+    ],
+    "python.formatting.provider": "yapf"
+}
