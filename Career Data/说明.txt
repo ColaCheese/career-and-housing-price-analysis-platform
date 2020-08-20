@@ -1,2 +1,0 @@
-workspider 爬取两个网站 职业薪水
-workspider1 爬取各职业方向数量
