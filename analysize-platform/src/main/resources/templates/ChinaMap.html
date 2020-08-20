@@ -1,0 +1,327 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"; >
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" href="https://jscdn.com.cn/highcharts/images/favicon.ico">
+    <meta name="viewport" content="width=device-width,
+          initial-scale=1.0,
+          maximum-scale=1.0,
+          user-scalable=no">
+    <script th:src="@{js/jquery.min.js}"></script>
+    <script src="https://code.highcharts.com.cn/highmaps/highmaps.js"></script>
+    <script th:src="@{framework/Highcharts/code/highcharts.js}"></script>
+    <script th:src="@{framework/Highcharts/code/modules/exporting.js}"></script>
+    <script th:src="@{framework/Highcharts/code/modules/export-data.js}"></script>
+    <script th:src="@{js/china.js}"></script>
+    <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.2.2/proj4.js}"></script>
+    <link th:href="@{layui/css/layui.css}" rel="stylesheet"/>
+    <script th:src="@{layui/layui.js}"></script>
+</head>
+<body>
+<div id="container" style="height: 100%;width:100%;position: absolute"></div>
+<div id="showTables" style="height: 40%;width:60%;background-color:black;display: none;position: relative;float: contour"></div>
+<script>
+    // chinaCitys.json 里包含中国一线到三线城市的坐标值及经纬度值
+    $.getJSON('https://data.jianshukeji.com/jsonp?filename=geochina/cities.json&callback=?', function(chinaCity) {
+        var beijing = chinaCity['北京'],
+            shanghai = chinaCity['上海'],
+            nanjing = chinaCity['南京'],
+            hangzhou=chinaCity['杭州'] ,
+            hefei=chinaCity['合肥'] ,
+            nanchang=chinaCity['南昌'],
+            fuzhou=chinaCity['福州'],
+            jinan=chinaCity['济南'] ,
+            ningbo=chinaCity['宁波'] ,
+            qingdao=chinaCity['青岛'],
+            wuxi=chinaCity['无锡'],
+            xiamen=chinaCity['厦门'],
+            yantai=chinaCity['烟台'],
+            jinghua=chinaCity['金华'],
+            wenzhou=chinaCity['温州'],
+            quanzhou=chinaCity['泉州'],
+            changsha=chinaCity['长沙'],
+            zhenzhou=chinaCity['郑州'],
+            wuhan=chinaCity['武汉'],
+            tianjing=chinaCity['天津'],
+            shijiazhuang=chinaCity['石家庄'],
+            taiyuan=chinaCity['太原'],
+            hhht=chinaCity['呼和浩特'],
+            xian=chinaCity['西安'],
+            lanzhou=chinaCity['兰州'],
+            yinchuan=chinaCity['银川'],
+            guangzhou=chinaCity['广州'],
+            haikou=chinaCity['海口'],
+            huizhou=chinaCity['惠州'],
+            zhuhai=chinaCity['珠海'],
+            foshan=chinaCity['佛山'],
+            dongguan=chinaCity['东莞'],
+            chengdu=chinaCity['成都'],
+            kunming=chinaCity['昆明'],
+            chongqing=chinaCity['重庆'],
+            guiyang=chinaCity['贵阳'],
+            hrb=chinaCity['哈尔滨'],
+            changchun=chinaCity['长春'],
+            shenyang=chinaCity['沈阳'],
+            dalian=chinaCity['大连'],
+            data = [{
+                // 直接用转换好的坐标位置
+                x: beijing.x,
+                y: -beijing.y,
+                name: beijing.name,
+                color: 'red',
+            },{
+                x: shanghai.x,
+                y: -shanghai.y,
+                name: shanghai.name,
+                color: 'red',
+            },{
+                x:hefei.x,
+                y:-hefei.y,
+                name:hefei.name,
+                color:'blue',
+            },{
+                x:nanjing.x,
+                y:-nanjing.y,
+                name:nanjing.name,
+                color:'blue',
+            },{
+                x:hangzhou.x,
+                y:-hangzhou.y,
+                name:hangzhou.name,
+                color:'blue',
+            },{
+                x:nanchang.x,
+                y:-nanchang.y,
+                name:nanchang.name,
+                color:'blue',
+            },{
+                x:fuzhou.x,
+                y:-fuzhou.y,
+                name:fuzhou.name,
+                color:'blue',
+            },{
+                x:jinan.x,
+                y:-jinan.y,
+                name:jinan.name,
+                color:'blue',
+            },{
+                x:ningbo.x,
+                y:-ningbo.y,
+                name:ningbo.name,
+                color:'blue',
+            },{
+                x:wuxi.x,
+                y:-wuxi.y,
+                name:wuxi.name,
+                color:'blue',
+            },{
+                x:xiamen.x,
+                y:-xiamen.y,
+                name:xiamen.name,
+                color:'blue',
+            },{
+                x:yantai.x,
+                y:-yantai.y,
+                name:yantai.name,
+                color:'blue',
+            },{
+                x:jinghua.x,
+                y:-jinghua.y,
+                name:jinghua.name,
+                color:'blue',
+            },{
+                x:wenzhou.x,
+                y:-wenzhou.y,
+                name:wenzhou.name,
+                color:'blue',
+            },{
+                x:quanzhou.x,
+                y:-quanzhou.y,
+                name:quanzhou.name,
+                color:'blue',
+            },{
+                x:changsha.x,
+                y:-changsha.y,
+                name:changsha.name,
+                color:'blue',
+            },{
+                x:zhenzhou.x,
+                y:-zhenzhou.y,
+                name:zhenzhou.name,
+                color:'blue',
+            },{
+                x:wuhan.x,
+                y:-wuhan.y,
+                name:wuhan.name,
+                color:'red',
+            },{
+                x:tianjing.x,
+                y:-tianjing.y,
+                name:tianjing.name,
+                color:'blue',
+            },{
+                x:shijiazhuang.x,
+                y:-shijiazhuang.y,
+                name:shijiazhuang.name,
+                color:'blue',
+            },{
+                x:taiyuan.x,
+                y:-taiyuan.y,
+                name:taiyuan.name,
+                color:'blue',
+            },{
+                x:hhht.x,
+                y:-hhht.y,
+                name:hhht.name,
+                color:'blue',
+            },{
+                x:xian.x,
+                y:-xian.y,
+                name:xian.name,
+                color:'blue',
+            },{
+                x:yinchuan.x,
+                y:-yinchuan.y,
+                name:yinchuan.name,
+                color:'blue',
+            },{
+                x:lanzhou.x,
+                y:-lanzhou.y,
+                name:lanzhou.name,
+                color:'blue',
+            },{
+                x:guangzhou.x,
+                y:-guangzhou.y,
+                name:guangzhou.name,
+                color:'red',
+            },{
+                x:haikou.x,
+                y:-haikou.y,
+                name:haikou.name,
+                color:'blue',
+            },{
+                x:huizhou.x,
+                y:-huizhou.y,
+                name:huizhou.name,
+                color:'blue',
+            },{
+                x:zhuhai.x,
+                y:-zhuhai.y,
+                name:zhuhai.name,
+                color:'blue',
+            },{
+                x:foshan.x,
+                y:-foshan.y,
+                name:foshan.name,
+                color:'blue',
+            },{
+                x:dongguan.x,
+                y:-dongguan.y,
+                name:dongguan.name,
+                color:'blue',
+            },{
+                x:chengdu.x,
+                y:-chengdu.y,
+                name:chengdu.name,
+                color:'red',
+            },{
+                x:kunming.x,
+                y:-kunming.y,
+                name:kunming.name,
+                color:'blue',
+            },{
+                x:chongqing.x,
+                y:-chongqing.y,
+                name:chongqing.name,
+                color:'blue',
+            },{
+                x:guiyang.x,
+                y:-guiyang.y,
+                name:guiyang.name,
+                color:'blue',
+            },{
+                x:hrb.x,
+                y:-hrb.y,
+                name:hrb.name,
+                color:'blue',
+            },{
+                x:changchun.x,
+                y:-changchun.y,
+                name:changchun.name,
+                color:'blue',
+            },{
+                x:dalian.x,
+                y:-dalian.y,
+                name:dalian.name,
+                color:'blue',
+            },{
+                x:shenyang.x,
+                y:-shenyang.y,
+                name:shenyang.name,
+                color:'blue',
+            }
+
+            ];
+        var map = new Highcharts.Map('container', {
+            title: {
+                text: '房价与职业分析平台'
+            },
+            mapNavigation: {
+                enabled: true,
+                buttonOptions: {
+                    verticalAlign: 'bottom'
+                }
+            },
+            tooltip: {
+                useHTML: true,
+                formatter: function() {
+                    return this.point.name;
+                }
+            },
+            plotOptions: {
+                mappoint: {
+                    point: {
+                        events: {
+                            click: function() {
+                                //alert(this.name);
+                                var data = this.name;
+                                layui.use("layer", function(){
+                                    var layer = layui.layer;
+                                    layer.open({
+                                        type: 2,
+                                        title: '房价与职业分析表',
+                                        content: ["/cityName","no"],
+                                        shadeClose: true,
+
+                                        shade: false,
+
+                                        area: ['900px', '600px'],
+                                        success: function (layero, index) {
+                                             $("iframe.layadmin-iframe").attr("allowfullscreen","true");
+                                            // 获取子页面的iframe
+                                            var iframe = window['layui-layer-iframe' + index];
+                                            // 向子页面的全局函数child传参
+                                            iframe.child(data);
+                                        }
+                                    });
+                                })
+                            }
+                        }
+                    }
+                }
+            },
+            series: [{
+                // 空数据列，用于展示底图
+                mapData: Highcharts.maps['cn/china'],
+                showInLegend: false
+            },{
+                type: 'mappoint',
+                name: '中国地图',
+                data: data
+            }]
+        });
+    });
+
+</script>
+</body>
+</html>
