@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"; >
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>职业与房价分析平台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" media="all">
+</head>
+<body class="layui-layout-body">
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/js/jquery.min.js}"></script>
+
+<div id="LAY_app">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">职业与房价分析平台</div>
+        <ul class="layui-nav layui-layout-right">
+            <form th:action="@{/logout}" method="post" style="padding-top: 10px;">
+                <button type="submit" class="layui-btn layui-btn-radius layui-btn-sm" value="注销">注销</button>
+            </form>
+        </ul>
+    </div>
+    <div class="layui-side layui-bg-black " style="top: 49px;">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test" id="roleMenu">
+            </ul>
+        </div>
+    </div>
+    <!-- 页面标签 -->
+    <div class="layadmin-pagetabs" id="LAY_app_tabs">
+        <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+        <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+        <div class="layui-icon layadmin-tabs-control layui-icon-down">
+            <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+                <li class="layui-nav-item" lay-unselect>
+                    <a href="javascript:;"></a>
+                    <dl class="layui-nav-child layui-anim-fadein">
+                        <dd layadmin-event="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
+                        <dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
+                        <dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+        <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+            <ul class="layui-tab-title" id="LAY_app_tabsheader">
+                <li lay-id="console.html" lay-attr="console.html" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="layui-body" id="LAY_app_body">
+        <div class="layadmin-tabsbody-item layui-show">
+            <iframe th:replace="console::html" frameborder="0" class="layadmin-iframe" allowfullscreen="true"></iframe>
+        </div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © 职业与房价分析平台
+    </div>
+</div>
+</div>
+<script>
+    layui.config({
+    base: './layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use('index');
+
+  $(document).ready(function () {
+	$.ajax({
+		url: "/menuController/roleMenu", //获取数据列
+		type: 'GET',
+		async: false,
+		success: function (data) {
+			formatStringToJson(data); //对数据进行处理
+		}
+	})
+})
+
+function formatStringToJson(data) {
+
+	var txt = "";
+	if (data.list != null)
+		for (x in data.list) {
+			if(x==0)
+				txt = txt + "<li class=\"layui-nav-item layui-nav-itemed\">" + "\n" ;
+			else
+			    txt = txt + "<li class=\"layui-nav-item\">" + "\n" ;
+			txt = txt + "<a class=\"\" href=\"javascript:;\">"+data.list[x].menuName+"</a>" + "\n" ;
+			if(data.list[x].list !=null){
+								txt = txt + "<dl class=\"layui-nav-child\">" + "\n";
+				for(y in data.list[x].list){
+					txt = txt + "<dd data-name=\"console\"><a lay-href=\""+data.list[x].list[y].menuUrl+"\">"+data.list[x].list[y].menuName+"</a></dd>" + "\n";
+				}
+                txt = txt + "</dl>" + "\n";
+			}
+			txt = txt + "</li>" + "\n" ;
+		}
+
+	$("#roleMenu").append(txt);
+
+	layui.use('element', function () {
+		var element = layui.element;
+	});
+
+}
+
+</script>
+</body>
+</html>

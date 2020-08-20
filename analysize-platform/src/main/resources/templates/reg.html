@@ -1,0 +1,137 @@
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>注册 - layuiAdmin</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
+  <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" media="all">
+  <link rel="stylesheet" th:href="@{/layuiadmin/style/login.css}" media="all">
+</head>
+<body>
+
+
+  <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
+    <div class="layadmin-user-login-main">
+      <div class="layadmin-user-login-box layadmin-user-login-header">
+        <h2>注册</h2>
+        <p>宝剑锋从磨砺出，梅花香自苦寒来。</p>
+      </div>
+      <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+        <div class="layui-form-item">
+          <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"></label>
+          <input type="text" name="username" id="LAY-user-login-username" lay-verify="required|username" placeholder="用户名" class="layui-input">
+        </div>
+        <div class="layui-form-item">
+          <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+          <input type="password" name="password" id="LAY-user-login-password" lay-verify="pass" placeholder="密码" class="layui-input">
+        </div>
+        <div class="layui-form-item">
+          <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-repass"></label>
+          <input type="password" name="repass" id="LAY-user-login-repass" lay-verify="required" placeholder="确认密码" class="layui-input">
+        </div>
+        <div class="layui-form-item">
+          <label class="layadmin-user-login-icon layui-icon layui-icon-dialogue" for="LAY-user-login-email"></label>
+          <input type="text" name="mail" id="LAY-user-login-email" lay-verify="email" placeholder="邮箱" class="layui-input">
+        </div>
+
+        <div class="layui-form-item">
+          <input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议" checked>
+        </div>
+        <div class="layui-form-item">
+          <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="LAY-user-reg-submit">注 册</button>
+        </div>
+        <div class="layui-trans layui-form-item layadmin-user-login-other">
+<!--          <label>社交账号注册</label>
+          <a href="javascript:;"><i class="layui-icon layui-icon-login-qq"></i></a>-->
+          
+          <a href="login.html" class="layadmin-user-jump-change layadmin-link layui-hide-xs">用已有帐号登入</a>
+          <a href="login.html" class="layadmin-user-jump-change layadmin-link layui-hide-sm layui-show-xs-inline-block">登入</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script th:src="@{/layuiadmin/layui/layui.js}"></script>
+  <script>
+  layui.config({
+    base: '../../layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index'//主入口模块
+  }).use(['index', 'user','form'], function(){
+    var $ = layui.$
+    ,setter = layui.setter
+    ,admin = layui.admin
+    ,form = layui.form
+    ,router = layui.router();
+
+form.verify({
+            username:[/^([a-zA-Z0-9_\.\-])+$/,"只能是数字或字母"],
+            username: function(value) {
+                var msg = "未生成判断结果";
+                $.ajax({
+                    type: "POST",
+                    url: '/ifreg',
+                    async:false,//同步提交。不设置则默认异步，异步的话，最后执行ajax
+                    data: {
+                        username: value
+                    },
+                    success: function(result) {
+                        msg = result;
+
+                    },
+                    error: function(error) {
+                        alert(error.status);
+                    }
+                });
+                if(msg=="tuue") {
+                    return "用户名已存在";
+                }
+            }
+
+         });
+
+
+    //提交
+    form.on('submit(LAY-user-reg-submit)', function(obj){
+
+      var field = obj.field;
+      
+      //确认密码
+      if(field.password !== field.repass){
+        return layer.msg('两次密码输入不一致');
+      }
+      
+      //是否同意用户协议
+      if(!field.agreement){
+        return layer.msg('你必须同意用户协议才能注册');
+      }
+
+      //请求接口
+       $.ajax({
+        type: "POST"
+        ,url: "/toreg" //实际使用请改成服务端真实接口
+        ,data: field
+        ,success: function(res){
+          console.log(res);
+          //console.log(res);
+          layer.msg('注册成功', {
+            offset: '15px'
+            ,icon: 1
+            ,time: 1000
+          }, function(){
+            window.location = '/login'; //跳转到登入页
+          });
+        }
+      });
+      
+      return false;
+    });
+  });
+  </script>
+</body>
+</html>
