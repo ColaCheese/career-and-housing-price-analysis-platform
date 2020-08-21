@@ -1,5 +1,5 @@
 import scrapy
-from soldHouse.items import SoldhouseItem
+from ..items import SoldhouseItem
 
 
 class HouseSpider(scrapy.Spider):
@@ -17,7 +17,7 @@ class HouseSpider(scrapy.Spider):
                 "温州", "泉州", '长沙', "郑州", "武汉", "北京", "天津", "石家庄", "太原", "呼和浩特", "西安", "兰州",
                 "银川", "广州", "海口", "惠州", "珠海", "佛山", "东莞", "成都", "昆明", "重庆", "贵阳", "哈尔滨", "长春",
                 "沈阳", "大连"]
-    print(len(nowcitys))
+
     start_urls = ['https://www.ke.com/city/']
     page = 1
     totalPage = 0
@@ -48,15 +48,6 @@ class HouseSpider(scrapy.Spider):
                 city = (citynames[i], currentcityurl)
                 self.citys.append(city)
 
-        print(self.citys)
-        print(len(self.citys))
-        print(self.secondcitys)
-        print(len(self.secondcitys))
-
-        # print(self.cityurl)
-        # print(self.currentcity)
-        # yield scrapy.Request('https://{}.ke.com/ershoufang/'.format(self.secondcitys[self.cityNum][1]),
-        #                      callback=self.secondarea)
 
         yield scrapy.Request('https://{}.fang.ke.com/loupan/'.format(self.citys[self.cityNum][1]),
                              callback=self.newarea)
@@ -68,8 +59,7 @@ class HouseSpider(scrapy.Spider):
         # yield scrapy.Request('https://{}.fang.ke.com/loupan/'.format(self.citys[self.cityNum]), callback=self.newarea)
 
     def newarea(self, response):
-        print("current city:")
-        print(self.cityNum)
+
         self.areas = []
         self.areaNum = 0
         areass = response.xpath('//ul[@class="district-wrapper"]/li/@data-district-spell').extract()
@@ -79,20 +69,15 @@ class HouseSpider(scrapy.Spider):
             area = (areanames[i], areass[i])
             self.areas.append(area)
 
-        print(self.areas)
 
         yield scrapy.Request(
             'https://{}.fang.ke.com/loupan/{}/pg1'.format(self.citys[self.cityNum][1], self.areas[self.areaNum][1]),
             callback=self.newdetail)
 
-        # print("area:{}".format(self.areas))
-        # yield scrapy.Request(
-        #    'https://{}.fang.ke.com/loupan/{}/pg1'.format(self.citys[self.cityNum], self.areas[self.areaNum]),
-        #   callback=self.newdetail)
+
 
     def secondarea(self, response):
-        print("current city:")
-        print(self.cityNum)
+
         self.areas = []
         self.areaNum = 0
         areass = str(response.xpath('//div[@data-role="ershoufang"]/div/a/@href').extract())
@@ -103,7 +88,7 @@ class HouseSpider(scrapy.Spider):
             area = (areanames[i], areasss[j])
             j += 3
             self.areas.append(area)
-        print(self.areas)
+
         yield scrapy.Request(
             'https://{}.ke.com/ershoufang/{}/pg1'.format(self.secondcitys[self.cityNum][1],
                                                          self.areas[self.areaNum][1]),
@@ -116,40 +101,26 @@ class HouseSpider(scrapy.Spider):
         item = SoldhouseItem()
 
         allcount = response.xpath('//div[@class="page-box"]/@data-total-count').extract()[0]
-        print("allcount:{}".format(allcount))
+
         self.totalPage = int(allcount) // 10 + 1
-        # print("total:{}".format(totalPage))
+
         currentcount = 1
         houses = response.xpath('//div[@class="resblock-desc-wrapper"]')
-        # print(houses)
+
         for each in houses:
 
             if allcount == '0':
-                """
-                item['name'] = "无"
 
-                item['city'] = self.citys[self.cityNum][0]
-
-                item['area'] = self.areas[self.areaNum][0]
-
-                item['htype'] = "new"
-
-                item['price'] = "0"
-
-                item['allcount'] = allcount
-
-                yield item
-                """
                 break
 
             if currentcount > int(allcount):
+
                 break
             else:
+
                 currentcount += 1
 
-            # name = each.xpath('div[@class="resblock-name"]/a/text()').extract()
-            # if name:
-            #     item['name'] = name[0]
+
 
             item['city'] = self.citys[self.cityNum][0]
 
@@ -161,8 +132,7 @@ class HouseSpider(scrapy.Spider):
                 'div[@class="resblock-price"]/div[@class="main-price"]/span[@class="number"]/text()').extract()
             unit = each.xpath(
                 'div[@class="resblock-price"]/div[@class="main-price"]/span[@class="desc"]/text()').extract()
-            # print(str(unit).find("总价"))
-            print(price[0] == "价格待定")
+
             if str(unit).find("总价") != -1 or price[0] == "价格待定":
                 continue
             if price:
@@ -178,8 +148,7 @@ class HouseSpider(scrapy.Spider):
                 'https://{}.fang.ke.com/loupan/{}/pg{}'.format(self.citys[self.cityNum][1], self.areas[self.areaNum][1],
                                                                self.page), callback=self.newdetail)
         else:
-            print("finished area:")
-            print(self.areaNum)
+
             self.areaNum += 1
             if self.areaNum < len(self.areas):
                 self.page = 1
@@ -188,12 +157,12 @@ class HouseSpider(scrapy.Spider):
                                                                   self.areas[self.areaNum][1]), callback=self.newdetail)
             else:
                 if self.cityNum < len(self.citys) - 1:
-                    print(len(self.citys))
+
                     self.cityNum += 1
                     yield scrapy.Request(
                         'https://{}.fang.ke.com/loupan/'.format(self.citys[self.cityNum][1]), callback=self.newarea)
                 else:
-                    print("newall")
+
                     self.cityNum = 0
                     yield scrapy.Request('https://{}.ke.com/ershoufang/'.format(self.secondcitys[self.cityNum][1]),
                                          callback=self.secondarea)
@@ -252,8 +221,7 @@ class HouseSpider(scrapy.Spider):
                                                               self.areas[self.areaNum][1],
                                                               self.page), callback=self.seconddetail)
         else:
-            print("finished area:")
-            print(self.areaNum)
+
             self.areaNum += 1
             if self.areaNum < len(self.areas):
                 self.page = 1

@@ -19,7 +19,13 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTM
 
 ITEM_PIPELINES = {
     'soldHouse.pipelines.SoldhousePipeline': 1,
+    'soldHouse.pipelines.MongoPipeline':2
 }
+
+MONGO_URI='47.99.179.33'
+MONGO_DB='soldHouse'
+MONGO_USER='admin'
+MONGO_PWD='root'
 
 # HBASE_HOST = '192.168.169.129'
 # HBASE_TABLE = 'PH_bigdata:sh_info'
