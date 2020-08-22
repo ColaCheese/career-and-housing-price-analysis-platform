@@ -8,10 +8,16 @@
 import scrapy
 
 class WorkspiderItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
+    # career salary data item
 
     occupation = scrapy.Field()
     salary = scrapy.Field()
+    location = scrapy.Field()
+
+class Workspider2Item(scrapy.Item):
+    # career direction number data item
+
+    direction = scrapy.Field()
+    number = scrapy.Field()
     location = scrapy.Field()
 
