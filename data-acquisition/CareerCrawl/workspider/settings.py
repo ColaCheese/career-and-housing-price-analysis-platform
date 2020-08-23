@@ -20,15 +20,15 @@ FEED_EXPORT_ENCODING = 'utf-8'
 # FEED_FORMAT = 'CSV'
 
 # MONGO_DB配置
-MONGO_URI='47.99.179.33'
-MONGO_DB='soldHouse'
-MONGO_USER='admin'
-MONGO_PWD='root'
-# 连接hbase
-ITEM_PIPELINES = {
-   'workspider.pipelines.WorkspiderPipeline': 1,
-}
+MONGO_URI = '47.99.179.33'
+MONGO_DB = 'soldHouse'
+MONGO_USER = 'admin'
+MONGO_PWD = 'root'
 
+ITEM_PIPELINES = {
+    'workspider.pipelines.WorkspiderPipeline': 1,
+    'workspider.pipelines.MongoPipeline': 2
+}
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36'
@@ -79,7 +79,6 @@ USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTM
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

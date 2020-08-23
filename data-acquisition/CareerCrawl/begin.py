@@ -1,5 +1,4 @@
 from scrapy import cmdline
 
+# 执行spider
 cmdline.execute("scrapy crawl work".split())
-cmdline.execute("scrapy crawl work1".split())
-
