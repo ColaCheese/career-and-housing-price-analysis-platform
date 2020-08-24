@@ -54,6 +54,7 @@
 </div>
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{framework/Echarts/code/modules/echarts-en.js}"></script>
 <script th:src="@{/framework/Highcharts/code/highcharts.js}"></script>
 <script th:src="@{/framework/Highcharts/code/modules/exporting.js}"></script>
 <script th:src="@{/framework/Highcharts/code/highcharts-more.js}"></script>
@@ -78,165 +79,55 @@
         Soldnum=res.citySoldnum,
         RentNum=res.cityRentnum;
 
-        chart = new Highcharts.Chart({
+       /*
+       var d1 = 1-Soldprice/MaxSoldprice,
+           d2 = Soldnum/MaxSoldnum,
+           d3 = 1-RentPrice/MaxRentPrice,
+           d4 = RentNum/MaxRentNum,
+           d5 = Money/MaxMoney,
+           d6 = Jobnum/MaxJobnum;*/
 
-            chart: {
-                padding: 0,
-                margin: 0,
-                renderTo: 'container',
-                polar: true,
-                type: 'area',
-                //backgroundColor: '#F2F2F2'
-                plotBackgroundImage: "http://imgd3.laoyuegou.com/mayday/img/dota-news/bg_gray.jpg",
-            },
+        var analysisChart = echarts.init(document.getElementById('container'));
+        var option = {
             title: {
-                text: '',
-                x: -80
+                text: '数据分析'
             },
-            credits: {
-                enabled: false
+            tooltip: {
+                trigger: 'item'
             },
-            exporting: {
-                enabled: false
-            },
-            pane: {
-                size: '85%',
-                startAngle: 20,
-                center: ['50%', '50%']
-            },
-            plotOptions: {
-                area: {
-                    fillOpacity: 0.30
-                }
-            },
-
-            xAxis: {
-                categories: ['房价', '房数', '租价','租数', '职价','职数'],
-                tickmarkPlacement: 'on',
-                lineWidth: 0,
-                gridLineColor: '#D8D8D8',
-                labels: {
-                    style: {
-                        color: '#B3B9C2',//B7F1E2
+            radar: {
+                // shape: 'circle',
+                name: {
+                    textStyle: {
+                        color: '#fff',
+                        backgroundColor: '#999',
+                        borderRadius: 3,
+                        padding: [3, 5]
                     }
                 },
-                showFirstLabel: true
+                indicator: [
+                    { name: '房价', max: MaxSoldprice},
+                    { name: '房数', max: MaxSoldnum},
+                    { name: '租价', max: MaxRentNum},
+                    { name: '租数', max: MaxRentNum},
+                    { name: '职价', max: MaxMoney},
+                    { name: '职数', max: MaxJobnum}
+                ]
             },
-
-            yAxis: {
-                gridLineInterpolation: 'polygon',
-                lineWidth: 0,
-                min: 0,
-                max: 1,
-                gridLineWidth: 1,
-                gridLineColor: '#B3B9C2',
-                plotBands: [{
-                    color: '#F2F2F2',
-                    borderColor: '#B3B9C2',
-                    borderWidth: 1,
-                    from: 0,
-                    to: 0.1
-                }, {
-                    color: '#F2F2F2',
-                    borderColor: '#B3B9C2',
-                    borderWidth: 1,
-                    from: 0.1,
-                    to: 0.2
-                }, {
-                    color: '#F2F2F2',
-                    borderColor: '#B3B9C2',
-                    borderWidth: 1,
-                    from: 0.2,
-                    to: 0.3
-                }, {
-                    color: '#F2F2F2',
-                    borderColor: '#B3B9C2',
-                    borderWidth: 1,
-                    from: 0.3,
-                    to: 0.4
-                },{
-                    color: '#F2F2F2',
-                    borderColor: '#B3B9C2',
-                    borderWidth: 1,
-                    from: 0.4,
-                    to: 0.5
-                }, {
-                    color: '#F2F2F2',
-                    borderColor: '#B3B9C2',
-                    borderWidth: 1,
-                    from: 0.5,
-                    to: 0.6
-                },{
-                    color: '#F2F2F2',
-                    borderColor: '#B3B9C2',
-                    borderWidth: 1,
-                    from: 0.6,
-                    to: 0.7
-                }, {
-                    color: '#F2F2F2',
-                    borderColor: '#B3B9C2',
-                    borderWidth: 1,
-                    from: 0.7,
-                    to: 0.8
-                },{
-                    color: '#F2F2F2',
-                    borderColor: '#B3B9C2',
-                    borderWidth: 1,
-                    from: 0.8,
-                    to: 0.9
-                }, {
-                    color: '#F2F2F2',
-                    borderColor: '#B3B9C2',
-                    borderWidth: 1,
-                    from: 0.9,
-                    to: 1.0
-                }],
-                labels: {
-                    enabled: false
-                }
-            },
-
-            tooltip: {
-                useHTML: true,
-                backgroundColor: '#FFFFFF',
-                borderWidth: 0,
-                style: {
-                    color: 'gray',
-                    padding: '10px'
-                }
-            },
-
-            legend: {
-                enabled: false
-            },
-
             series: [{
-                data: [{
-                    name: '房价',
-                    y: 1-Soldprice/MaxSoldprice
-                }, {
-                    name: '房数',
-                    y: Soldnum/MaxSoldnum
-                }, {
-                    name: '租价',
-                    y:1-RentPrice/MaxRentPrice
-                }, {
-                    name: '租数',
-                    y: RentNum/MaxRentNum
-                },{
-                    name: '职价',
-                    y: Money/MaxMoney
-                },{
-                    name: '职数',
-                    y:Jobnum/MaxJobnum
-                }],
-                pointPlacement: 'on',
-                color: '#269783'
+                name: '数据分析',
+                type: 'radar',
+                areaStyle: {},
+                data: [
+                    {
+                        value: [Soldprice, Soldnum, RentPrice, RentNum, Money, Jobnum],
+                        name: '数据分析'
+                    }
+                ]
             }]
+        };
 
-        });
-
-        chart.series[0].points[0].onMouseOver();
+        analysisChart.setOption(option);
     };
 
 //JavaScript代码区域
