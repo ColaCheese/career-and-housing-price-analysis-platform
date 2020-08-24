@@ -22,14 +22,12 @@ class HouseSpider(scrapy.Spider):
     page = 1
     totalPage = 0
 
-    # allcount = 0
-
     def parse(self, response):
 
-        cityss = response.xpath('//div[@class="city_province"]/ul/li[@class="CLICKDATA"]/a/@href').extract()
-        citynames = response.xpath('//div[@class="city_province"]/ul/li[@class="CLICKDATA"]/a/text()').extract()
-        # print(cityss)
-        # print(citysnames)
+        cityss = response.xpath(
+            '//div[@class="city_province"]/ul/li[@class="CLICKDATA"]/a/@href').extract()
+        citynames = response.xpath(
+            '//div[@class="city_province"]/ul/li[@class="CLICKDATA"]/a/text()').extract()
 
         for i in range(len(cityss)):
             if citynames[i] == "大洛杉矶地区":
@@ -48,7 +46,6 @@ class HouseSpider(scrapy.Spider):
                 city = (citynames[i], currentcityurl)
                 self.citys.append(city)
 
-
         yield scrapy.Request('https://{}.fang.ke.com/loupan/'.format(self.citys[self.cityNum][1]),
                              callback=self.newarea)
 
@@ -62,27 +59,29 @@ class HouseSpider(scrapy.Spider):
 
         self.areas = []
         self.areaNum = 0
-        areass = response.xpath('//ul[@class="district-wrapper"]/li/@data-district-spell').extract()
-        areanames = response.xpath('//ul[@class="district-wrapper"]/li/text()').extract()
+        areass = response.xpath(
+            '//ul[@class="district-wrapper"]/li/@data-district-spell').extract()
+        areanames = response.xpath(
+            '//ul[@class="district-wrapper"]/li/text()').extract()
 
         for i in range(len(areass)):
             area = (areanames[i], areass[i])
             self.areas.append(area)
 
-
         yield scrapy.Request(
-            'https://{}.fang.ke.com/loupan/{}/pg1'.format(self.citys[self.cityNum][1], self.areas[self.areaNum][1]),
+            'https://{}.fang.ke.com/loupan/{}/pg1'.format(
+                self.citys[self.cityNum][1], self.areas[self.areaNum][1]),
             callback=self.newdetail)
-
-
 
     def secondarea(self, response):
 
         self.areas = []
         self.areaNum = 0
-        areass = str(response.xpath('//div[@data-role="ershoufang"]/div/a/@href').extract())
+        areass = str(response.xpath(
+            '//div[@data-role="ershoufang"]/div/a/@href').extract())
         areasss = areass.split("/")
-        areanames = response.xpath('//div[@data-role="ershoufang"]/div/a/text()').extract()
+        areanames = response.xpath(
+            '//div[@data-role="ershoufang"]/div/a/text()').extract()
         j = 2
         for i in range(len(areanames)):
             area = (areanames[i], areasss[j])
@@ -94,13 +93,13 @@ class HouseSpider(scrapy.Spider):
                                                          self.areas[self.areaNum][1]),
             callback=self.seconddetail)
 
-
     def newdetail(self, response):
 
         # 创建items实例
         item = SoldhouseItem()
 
-        allcount = response.xpath('//div[@class="page-box"]/@data-total-count').extract()[0]
+        allcount = response.xpath(
+            '//div[@class="page-box"]/@data-total-count').extract()[0]
 
         self.totalPage = int(allcount) // 10 + 1
 
@@ -119,8 +118,6 @@ class HouseSpider(scrapy.Spider):
             else:
 
                 currentcount += 1
-
-
 
             item['city'] = self.citys[self.cityNum][0]
 
@@ -172,9 +169,11 @@ class HouseSpider(scrapy.Spider):
         # 创建items实例
         item = SoldhouseItem()
 
-        allcount = str(response.xpath('//h2[@class="total fl"]/span/text()').extract()[0])
+        allcount = str(response.xpath(
+            '//h2[@class="total fl"]/span/text()').extract()[0])
         # print(allcount)
-        nextLink = str(response.xpath('//div[@class="page-box house-lst-page-box"]').extract())
+        nextLink = str(response.xpath(
+            '//div[@class="page-box house-lst-page-box"]').extract())
         if int(allcount) > 0:
             left = nextLink.find("totalPage")
             right = nextLink.find("curPage")
@@ -233,7 +232,8 @@ class HouseSpider(scrapy.Spider):
                 if self.cityNum < len(self.secondcitys) - 1:
                     self.cityNum += 1
                     yield scrapy.Request(
-                        'https://{}.ke.com/ershoufang/'.format(self.secondcitys[self.cityNum][1]),
+                        'https://{}.ke.com/ershoufang/'.format(
+                            self.secondcitys[self.cityNum][1]),
                         callback=self.secondarea)
                 else:
                     print("allcity")
