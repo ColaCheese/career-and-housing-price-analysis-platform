@@ -1,256 +1,491 @@
 <!DOCTYPE html >
-<html lang="en" xmlns:th="http://www.thymeleaf.org"; >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,
-          initial-scale=1.0,
-          maximum-scale=1.0,
-          user-scalable=no">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <title>主页</title>
     <script th:src="@{js/jquery.min.js}"></script>
-    <script th:src="@{framework/Highcharts/code/highcharts.js}"></script>
-    <script th:src="@{framework/Highcharts/code/modules/exporting.js}"></script>
-    <script th:src="@{framework/Highcharts/code/modules/export-data.js}"></script>
-    <link th:href="@{layui/css/layui.css}" rel="stylesheet"/>
+    <script th:src="@{framework/Echarts/code/modules/echarts-en.js}"></script>
     <script th:src="@{layui/layui.js}"></script>
+    <script th:src="@{layui/lay/modules/layer.js}"></script>
+    <link th:href="@{layui/css/layui.css}" rel="stylesheet"/>
     <style>
-        * {
-            padding: 0;
-            margin: 0;
+        html, body {
+            height: 100%;
         }
-
+        body {
+            overflow-y: scroll;
+            overflow-x: scroll;
+        }
+        #box {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .chart {
+            width: 49%;
+            height: 49%;
+            padding: 3px;
+        }
     </style>
 
 </head>
 
 <body>
-<div id="box" style="height:600px;width: 600px;background-color: grey;position: absolute; margin-top:30px;">
-    <div id="container_first" style="width:296px;height:296px;position: relative;float: left ;margin: 2px"></div>
-    <div id="container_second" style="width:296px;height:296px;position: relative;float: left ;margin: 2px"></div>
-    <div id="container_third" style="width:296px;height:296px;position: relative;float: left ;margin: 2px"></div>
-    <div id="container_forth" style="width:296px;height:296px;position: relative;float: left ;margin: 2px"></div>
-</div>
+    <div id="box">
+    <div id="rentPrice" class="chart"></div>
+    <div id="rentNum" class="chart" ></div>
+    <div id="soldPrice" class="chart"></div>
+    <div id="soldNum" class="chart"></div>
+    </div>
 </body>
 
 <script>
-
-
+    let district = [];
+    let rentPrice = [];
+    let rentNum = [];
+    let soldPrice = [];
+    let soldNum = [];
     $(document).ready(function () {
-
-        //表1 七大区-租价表
         $.ajax({
             type: "POST",
             url: "/dataController/Drent",
             success: function (msg) {
-                var data = [];
-                for (i = 0; i < msg.length; i++) {
-                    var newData = {name: ' ', y: 11.84};
-                    newData.name = msg[i].districtName;
-                    newData.y = msg[i].districtRentprice;
-                    data.push(newData)
-
+                for (let i = 0; i < msg.length; i++) {
+                    district.push(msg[i].districtName);
+                    rentPrice.push(msg[i].districtRentprice);
+                    rentNum.push(msg[i].districtRentnum);
                 }
-                <!--城区 平均租价-->
-                Highcharts.chart('container_first', {
-                    chart: {
-                        type: 'column'
-                    },
+                let dataShadow = [];
+                for (let i = 0; i < rentPrice.length; i++) {
+                    dataShadow.push(500);
+                }
+                let rentPriceChart = echarts.init(document.getElementById('rentPrice'));
+                let rentNumChart = echarts.init(document.getElementById('rentNum'));
+                <!--房租排行-->
+                let option1 = {
                     title: {
-                        text: '租房价格排行'
+                        text: "七大地区房租排行",
+                        subtext: 'Rent ranking of seven regions'
+
                     },
-                    subtitle: {
-                        text: 'RentPrice'
-                    },
+
                     xAxis: {
-                        type: 'category'
+                        data: district,
+                        textStyle: {
+                            color: '#000'
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        axisLine: {
+                            show: false
+                        },
+                        title: {
+                            text: "地区"
+                        }
                     },
                     yAxis: {
-                        title: {
-                            text: '房价（元/月）'
-                        }
-
-                    },
-                    legend: {
-                        enabled: false
-                    },
-                    plotOptions: {
-                        series: {
-                            borderWidth: 0,
-                            dataLabels: {
-                                enabled: true,
-                                format: '{point.y}'
+                        axisLine: {
+                            show: false
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        axisLabel: {
+                            textStyle: {
+                                color: '#999'
                             }
                         }
                     },
-
+                    dataZoom: [
+                        {
+                            type: 'inside'
+                        }
+                    ],
                     tooltip: {
-                        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-                    },
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            crossStyle: {
+                                color: '#000'
+                            }
+                        },
+                        formatter: function (params) {
+                            let firstParams = params[0];
+                            let secondParams = params[1];
+                            return firstParams.name + ':'+ secondParams.data;
 
+                        }
+                    },
+                    grid: {
+                        left: 50,
+                        top: 78,
+                        right: 40,
+                        bottom: 40,
+                    },
                     series: [
                         {
-                            name: "TOP10",
-                            colorByPoint: true,
-                            data: data
+                            type: 'bar',
+                            itemStyle: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            barGap: '-100%',
+                            barCategoryGap: '40%',
+                            data: dataShadow,
+                            animation: false
+                        },
+                        {
+                            type: 'bar',
+                            itemStyle: {
+                                color: new echarts.graphic.LinearGradient(
+                                    0, 0, 0, 1,
+                                    [
+                                        {offset: 0, color: '#83bff6'},
+                                        {offset: 0.5, color: '#188df0'},
+                                        {offset: 1, color: '#188df0'}
+                                    ]
+                                )
+                            },
+                            emphasis: {
+                                itemStyle: {
+                                    color: new echarts.graphic.LinearGradient(
+                                        0, 0, 0, 1,
+                                        [
+                                            {offset: 1, color: '#83bff6'},
+                                            {offset: 0.5, color: '#188df0'},
+                                            {offset: 0, color: '#188df0'}
+                                        ]
+                                    )
+                                }
+                            },
+                            data: rentPrice
                         }
                     ]
-                });
-                data = [];
-                console.log(msg);
-                for (i = 0; i < msg.length; i++) {
-                    newData = {name: ' ', y: 11.84};
-                    newData.name = msg[i].districtName;
-                    newData.y = msg[i].districtRentnum;
-                    data.push(newData)
-
-                }
-                Highcharts.chart('container_second', {
-                    chart: {
-                        plotBackgroundColor: null,
-                        plotBorderWidth: null,
-                        plotShadow: false,
-                        type: 'pie'
-                    },
+                };
+                <!--租房数量占比-->
+                let option2 = {
                     title: {
-                        text: '租数份额'
+                        text: '七大地区租房数份额',
+                        subtext: 'Share of rental housing in seven regions',
                     },
+
                     tooltip: {
-                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                        trigger: 'item',
+                        formatter: '{b} : {c} ({d}%)'
                     },
-                    plotOptions: {
-                        pie: {
-                            allowPointSelect: true,
-                            cursor: 'pointer',
-                            dataLabels: {
-                                enabled: true,
-                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                                style: {
-                                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                                }
-                            }
+                    visualMap: {
+                        show: false,
+                        min: 80,
+                        max: 600,
+                        inRange: {
+                            colorLightness: [0, 0.5]
                         }
                     },
-                    series: [{
-                        name: 'Brands',
-                        colorByPoint: true,
-                        data: data
-                    }]
-                })
-            }
-        });
+                    grid: {
+                        left: 50,
+                        top: 78,
+                        right: 40,
+                        bottom: 40,
+                    },
+                    series: [
+                        {
+                            name: '份额',
+                            type: 'pie',
+                            radius: '55%',
+                            center: ['50%', '50%'],
+                            data: [
+                                {value: rentNum[0], name: district[0]},
+                                {value: rentNum[1], name: district[1]},
+                                {value: rentNum[2], name: district[2]},
+                                {value: rentNum[3], name: district[3]},
+                                {value: rentNum[4], name: district[4]},
+                                {value: rentNum[5], name: district[5]},
+                                {value: rentNum[6], name: district[6]}
+                            ].sort(function (a, b) {
+                                return a.value - b.value;
+                            }),
+                            roseType: 'radius',
+                            label: {
+                                color: '#000'
+                            },
+                            labelLine: {
+                                lineStyle: {
+                                    color: '#000'
+                                },
+                                smooth: 0.2,
+                                length: 10,
+                                length2: 20
+                            },
+                            animationType: 'scale',
+                            animationEasing: 'elasticOut',
+                        }
+                    ]
+                };
+                rentPriceChart.setOption(option1);
+                rentNumChart.setOption(option2);
 
-        //表3 七大区-买价表
+                rentPriceChart.on('click', function () {
+                        layui.use("layer", function(){
+                            window.top.layer.open({
+                                type: 1,
+                                shadeClose: true,//点击遮罩关闭
+                                shade: [0.3, '#000',true],
+                                closeBtn:0,//删除关闭按钮
+                                title: false,//删除标题
+                                area: ['1200px', '800px'],
+                                content:'<div id="fullChart" style="height:100%;width:100%;"></div>',
+                                success:function(){
+                                    let full = echarts.init(window.top.document.getElementById('fullChart'));
+                                    full.setOption(option1);
+                                }
+                            });
+                        })
+                });
+                rentNumChart.on('click', function () {
+                    layui.use("layer", function(){
+                        window.top.layer.open({
+                            type: 1,
+                            shadeClose: true,//点击遮罩关闭
+                            shade: [0.3, '#000',true],
+                            closeBtn:0,//删除关闭按钮
+                            title: false,//删除标题
+                            area: ['1200px', '800px'],
+                            content:'<div id="fullChart" style="height:100%;width:100%;"></div>',
+                            success:function(){
+                                let full = echarts.init(window.top.document.getElementById('fullChart'));
+                                full.setOption(option2);
+                            }
+                        });
+                    })
+
+                });
+            }
+
+        });
         $.ajax({
             type: "POST",
             url: "/dataController/Dsold",
             success: function (msg) {
-                var data = [];
-                for (i = 0; i < msg.length; i++) {
-                    var newData = {name: ' ', y: 11.84};
-                    newData.name = msg[i].districtName;
-                    newData.y = msg[i].districtSoldprice;
-                    data.push(newData)
-
+                for (let i = 0; i < msg.length; i++) {
+                    soldPrice.push(msg[i].districtSoldprice);
+                    soldNum.push(msg[i].districtSoldnum);
                 }
-                <!--城区 平均租价-->
-                Highcharts.chart('container_third', {
-                    chart: {
-                        type: 'column'
-                    },
+                let dataShadow = [];
+                for (let i = 0; i < rentPrice.length; i++) {
+                    dataShadow.push(500);
+                }
+                let soldPriceChart = echarts.init(document.getElementById('soldPrice'));
+                let soldNumChart = echarts.init(document.getElementById('soldNum'));
+                <!--房价排行-->
+                let option3 = {
                     title: {
-                        text: '买房价格排行'
+                        text: "七大地区房价排行",
+                        subtext: 'House price ranking of seven regions'
                     },
-                    subtitle: {
-                        text: 'SoldPrice'
-                    },
+
                     xAxis: {
-                        type: 'category'
+                        data: district,
+                        textStyle: {
+                            color: '#000'
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        axisLine: {
+                            show: false
+                        },
                     },
                     yAxis: {
-                        title: {
-                            text: '房价（元/㎡）'
-                        }
-
-                    },
-                    legend: {
-                        enabled: false
-                    },
-                    plotOptions: {
-                        series: {
-                            borderWidth: 0,
-                            dataLabels: {
-                                enabled: true,
-                                format: '{point.y}'
+                        axisLine: {
+                            show: false
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        axisLabel: {
+                            textStyle: {
+                                color: '#999'
                             }
                         }
                     },
-
                     tooltip: {
-                        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-                    },
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            crossStyle: {
+                                color: '#000'
+                            }
+                        },
+                        formatter: function (params) {
+                            let firstParams = params[0];
+                            let secondParams = params[1];
+                            return firstParams.name + ':'+ secondParams.data;
 
+                        }
+                    },
+                    grid: {
+                        left: 50,
+                        top: 78,
+                        right: 40,
+                        bottom: 40,
+                    },
+                    dataZoom: [
+                        {
+                            type: 'inside'
+                        }
+                    ],
                     series: [
                         {
-                            name: "TOP10",
-                            colorByPoint: true,
-                            data: data
+                            name: '房租',
+                            type: 'bar',
+                            itemStyle: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            barGap: '-100%',
+                            barCategoryGap: '40%',
+                            data: dataShadow,
+                            animation: false
+                        },
+                        {
+                            type: 'bar',
+                            itemStyle: {
+                                color: new echarts.graphic.LinearGradient(
+                                    0, 0, 0, 1,
+                                    [
+                                        {offset: 0, color: '#bce672'},
+                                        {offset: 0.5, color: '#9ed048'},
+                                        {offset: 1, color: '#96ce54'}
+                                    ]
+                                )
+                            },
+                            emphasis: {
+                                itemStyle: {
+                                    color: new echarts.graphic.LinearGradient(
+                                        0, 0, 0, 1,
+                                        [
+                                            {offset: 1, color: '#bce672'},
+                                            {offset: 0.5, color: '#9ed048'},
+                                            {offset: 0, color: '#96ce54'}
+                                        ]
+                                    )
+                                }
+                            },
+                            data: soldPrice
                         }
                     ]
-                });
-                data = [];
-                console.log(msg);
-                for (i = 0; i < msg.length; i++) {
-                    newData = {name: ' ', y: 11.84};
-                    newData.name = msg[i].districtName;
-                    newData.y = msg[i].districtSoldnum;
-                    data.push(newData)
+                };
 
-                }
-                Highcharts.chart('container_forth', {
-                    chart: {
-                        plotBackgroundColor: null,
-                        plotBorderWidth: null,
-                        plotShadow: false,
-                        type: 'pie'
-                    },
+                <!--买房数量占比-->
+                let option4 = {
                     title: {
-                        text: '售数份额'
+                        text: '七大地区售房数份额',
+                        subtext: 'Share of housing sales in seven regions',
                     },
+
                     tooltip: {
-                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                        trigger: 'item',
+                        formatter: '{b} : {c} ({d}%)'
                     },
-                    plotOptions: {
-                        pie: {
-                            allowPointSelect: true,
-                            cursor: 'pointer',
-                            dataLabels: {
-                                enabled: true,
-                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                                style: {
-                                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                                }
-                            }
+                    visualMap: {
+                        show: false,
+                        min: 80,
+                        max: 600,
+                        inRange: {
+                            colorLightness: [0, 0.5]
                         }
                     },
-                    series: [{
-                        name: 'Brands',
-                        colorByPoint: true,
-                        data: data
-                    }]
-                })
+                    grid: {
+                        left: 50,
+                        top: 78,
+                        right: 40,
+                        bottom: 40,
+                    },
+                    series: [
+                        {
+                            name: '份额',
+                            type: 'pie',
+                            radius: '55%',
+                            center: ['50%', '50%'],
+                            data: [
+                                {value: soldNum[0], name: district[0]},
+                                {value: soldNum[1], name: district[1]},
+                                {value: soldNum[2], name: district[2]},
+                                {value: soldNum[3], name: district[3]},
+                                {value: soldNum[4], name: district[4]},
+                                {value: soldNum[5], name: district[5]},
+                                {value: soldNum[6], name: district[6]}
+                            ].sort(function (a, b) {
+                                return a.value - b.value;
+                            }),
+                            roseType: 'radius',
+                            label: {
+                                color: '#000'
+                            },
+                            labelLine: {
+                                lineStyle: {
+                                    color: '#000'
+                                },
+                                smooth: 0.2,
+                                length: 10,
+                                length2: 20
+                            },
+
+                            animationType: 'scale',
+                            animationEasing: 'elasticOut',
+                        }
+                    ]
+                };
+                // 使用刚指定的配置项和数据显示图表
+
+                soldPriceChart.setOption(option3);
+                soldNumChart.setOption(option4);
+                soldPriceChart.on('click', function () {
+                    layui.use("layer", function() {
+                        window.top.layer.open({
+                            type: 1,
+                            shadeClose: true,//点击遮罩关闭
+                            shade: [0.3, '#000', true],
+                            closeBtn: 0,//删除关闭按钮
+                            title: false,//删除标题
+                            area: ['1200px', '800px'],
+                            content: '<div id="fullChart" style="height:100%;width:100%;"></div>',
+                            success: function () {
+                                let full = echarts.init(window.top.document.getElementById('fullChart'));
+                                full.setOption(option3);
+                            }
+                        });
+                    })
+
+                });
+                soldNumChart.on('click', function () {
+                    layui.use("layer", function() {
+                        window.top.layer.open({
+                            type: 1,
+                            shadeClose: true,//点击遮罩关闭
+                            shade: [0.3, '#000', true],
+                            closeBtn: 0,//删除关闭按钮
+                            title: false,//删除标题
+                            area: ['1200px', '800px'],
+                            content: '<div id="fullChart" style="height:100%;width:100%;"></div>',
+                            success: function () {
+                                let full = echarts.init(window.top.document.getElementById('fullChart'));
+                                full.setOption(option4);
+                            }
+                        });
+                    })
+
+                });
             }
         });
 
 
-
-
-    });//documet.readyfunction
-
+    });
 
 </script>
-
-
+<script>
+</script>
 </html>
