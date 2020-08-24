@@ -9,29 +9,37 @@
           user-scalable=no">
     <title>主页</title>
     <script th:src="@{js/jquery.min.js}"></script>
-    <script th:src="@{framework/Highcharts/code/highcharts.js}"></script>
-    <script th:src="@{framework/Highcharts/code/modules/exporting.js}"></script>
-    <script th:src="@{framework/Highcharts/code/modules/export-data.js}"></script>
+    <script th:src="@{framework/Echarts/code/modules/echarts-en.js}"></script>
     <link th:href="@{layui/css/layui.css}" rel="stylesheet"/>
     <script th:src="@{layui/layui.js}"></script>
     <style>
-        * {
-            padding: 0;
-            margin: 0;
+        html,body{
+            height: 100%;
         }
-
+        #box{
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content:center;
+            flex-wrap:wrap;
+        }
+        .chart{
+            width:32%;
+            height:50%;
+            padding:3px;
+        }
     </style>
 
 </head>
 
 <body>
-<div id="box" style="height:600px;width: 900px;background-color: grey;position: absolute">
-    <div id="container_first" style="width:296px;height:296px;position: relative;float: left ;margin: 2px"></div>
-    <div id="container_second" style="width:296px;height:296px;position: relative;float: left ;margin: 2px"></div>
-    <div id="container_third" style="width:296px;height:296px;position: relative;float: left ;margin: 2px"></div>
-    <div id="container_forth" style="width:296px;height:296px;position: relative;float: left ;margin: 2px"></div>
-    <div id="container_fifth" style="width:296px;height:296px;position: relative;float: left ;margin: 2px"></div>
-    <div id="container_sixth" style="width:296px;height:296px;position: relative;float: left ;margin: 2px"></div>
+<div id="box" style="height:600px;width: 900px;background-color:grey;position: absolute">
+    <div id="container_first" class="chart" style="background-color:white"></div>
+    <div id="container_second" class="chart" style="background-color:white"></div>
+    <div id="container_third" class="chart" style="background-color:white"></div>
+    <div id="container_forth" class="chart" style="background-color:white"></div>
+    <div id="container_fifth" class="chart" style="background-color:white"></div>
+    <div id="container_sixth" class="chart" style="background-color:white"></div>
 </div>
 </body>
 
@@ -45,176 +53,223 @@
                 type: "POST",
                 url: "/dataController/LZHarea",
                 success: function (msg) {
-                    var data = [];
+                    var districts = [];
+                    var rentPrice = [];
                     for (i = 0; i < msg.length; i++) {
-                        var newData = {name: ' ', y: 11.84};
                         if (msg[i].cityName == d.substr(0, d.length - 1)) {
-                            newData.name = msg[i].cityName + "-" + msg[i].areaName;
-                            newData.y = msg[i].areaRentprice;
-                            data.push(newData)
+                            districts.push(msg[i].areaName);
+                            rentPrice.push(msg[i].areaRentprice);
                         }
                     }
-                    <!--城区 平均租价-->
-                    Highcharts.chart('container_first', {
-                        chart: {
-                            type: 'column'
-                        },
+                    var rentPriceChart = echarts.init(document.getElementById('container_first'));
+                    var dataShadow = [];
+                    for (var i = 0; i < rentPrice.length; i++) {
+                        dataShadow.push(500);
+                    }
+                    <!--城区 租价排行-->
+                    var option1 = {
                         title: {
-                            text: '租房价格排行'
+                            text: "租房价格排行",
+                            subtext: 'Rent price ranking in districts of city'
                         },
-                        subtitle: {
-                            text: 'RentPrice'
-                        },
+
                         xAxis: {
-                            type: 'category'
+                            data: districts,
+                            textStyle: {
+                                color: '#000'
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLine: {
+                                show: false
+                            },
+                            axisLabel: {
+                                rotate: 40
+                            }
                         },
                         yAxis: {
-                            title: {
-                                text: '房价（元/月）'
-                            }
-
-                        },
-                        legend: {
-                            enabled: false
-                        },
-                        plotOptions: {
-                            series: {
-                                borderWidth: 0,
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '{point.y}'
+                            axisLine: {
+                                show: false
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#999'
                                 }
                             }
                         },
-
                         tooltip: {
                             headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
                             pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
                         },
-
+                        dataZoom: [
+                            {
+                                type: 'inside'
+                            }
+                        ],
+                        grid:{
+                            left: 50,
+                            top: 78,
+                            right: 40,
+                            bottom: 40,
+                        },
                         series: [
                             {
-                                name: "TOP10",
-                                colorByPoint: true,
-                                data: data
+                            type: 'bar',
+                            itemStyle: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            barGap: '-100%',
+                            barCategoryGap: '40%',
+                            data: dataShadow,
+                            animation: false
+                            },
+                            {
+                                type: 'bar',
+                                itemStyle: {
+                                    color: new echarts.graphic.LinearGradient(
+                                        0, 0, 0, 1,
+                                        [
+                                            {offset: 0, color: '#83bff6'},
+                                            {offset: 0.5, color: '#188df0'},
+                                            {offset: 1, color: '#188df0'}
+                                        ]
+                                    )
+                                },
+                                emphasis: {
+                                    itemStyle: {
+                                        color: new echarts.graphic.LinearGradient(
+                                            0, 0, 0, 1,
+                                            [
+                                                {offset: 1, color: '#F5A9A9'},
+                                                {offset: 0.5, color: '#FE2E2E'},
+                                                {offset: 0, color: '#DF0101'}
+                                            ]
+                                        )
+                                    }
+                                },
+                                data: rentPrice
                             }
                         ]
-                    });
+                    };
+                    rentPriceChart.setOption(option1);
+                    /*
+                    rentPriceChart.on('click', function (params) {
+                        layui.use("layer", function(){
+                            parent.layer.open({
+                                type: 2,
+                                shadeClose: true,//点击遮罩关闭
+                                shade: [0.3, '#000',true],
+                                closeBtn:0,//删除关闭按钮
+                                area: ['700px', '600px'],
+                                x:"center",
+                                y:"center",
+                            });
+                        })
+                    });*/
                 }
             });
 
 
-            //表2 表4 城市平均售数量 城市平均售价
+            //表2 城市售数比例
             $.ajax({
                 type: "POST",
                 url: "/dataController/areaSold",
                 success: function (msg) {
                     var data = [];
+                    var count = 0;
                     //console.log(msg);
                     for (i = 0; i < msg.length; i++) {
-                        var newData = {name: ' ', y: 11.84};
                         if (msg[i].cityName == d.substr(0, d.length - 1)) {
-                            newData.name = msg[i].cityName + "-" + msg[i].areaName;
-                            newData.y = msg[i].areaSoldnum;
-                            data.push(newData)
+                            count++;
+                            if (count >= 6)
+                                break;
+                            newData = {name: ' ', value: 11.84};
+                            newData.name = msg[i].areaName;
+                            newData.value = msg[i].areaSoldnum;
+                            data.push(newData);
                         }
                     }
-                    Highcharts.chart('container_second', {
-                        chart: {
-                            plotBackgroundColor: null,
-                            plotBorderWidth: null,
-                            plotShadow: false,
-                            type: 'pie'
-                        },
+                    var soldNumChart = echarts.init(document.getElementById('container_second'));
+                    <!--租房数量占比-->
+                    var option2 = {
                         title: {
-                            text: '城区售数份额'
+                            text: '城区售房数比例',
+                            subtext: 'Share of sold housing in districts of city',
                         },
                         tooltip: {
                             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
                         },
-                        plotOptions: {
-                            pie: {
-                                allowPointSelect: true,
-                                cursor: 'pointer',
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                                    style: {
-                                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                                    }
-                                }
+                        visualMap: {
+                            show: false,
+                            min: 80,
+                            max: 600,
+                            inRange: {
+                                colorLightness: [0, 0.5]
                             }
                         },
-                        series: [{
-                            name: 'Brands',
-                            colorByPoint: true,
-                            data: data
-                        }]
-                    });
-                    data = [];
-                    for (i = 0; i < msg.length; i++) {
-                        newData = {name: ' ', y: 11.84};
-                        if (msg[i].cityName == d.substr(0, d.length - 1)) {
-                            newData.name = msg[i].cityName + "-" + msg[i].areaName;
-                            newData.y = msg[i].areaSoldprice;
-                            data.push(newData)
-                        }
-                    }
-                    <!--城区 平均租价-->
-                    Highcharts.chart('container_forth', {
-                        chart: {
-                            type: 'column'
+                        grid: {
+                            left: 50,
+                            top: 78,
+                            right: 40,
+                            bottom: 40,
                         },
-                        title: {
-                            text: '城区售价表'
-                        },
-                        subtitle: {
-                            text: 'CitySoldPrice'
-                        },
-                        xAxis: {
-                            type: 'category'
-                        },
-                        yAxis: {
-                            title: {
-                                text: '房价（元/㎡）'
-                            }
-
-                        },
-                        legend: {
-                            enabled: false
-                        },
-                        plotOptions: {
-                            series: {
-                                borderWidth: 0,
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '{point.y}'
-                                }
-                            }
-                        },
-
-                        tooltip: {
-                            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-                        },
-
                         series: [
                             {
-                                name: "TOP10",
-                                colorByPoint: true,
-                                data: data
+                                name: '售房数比例',
+                                type: 'pie',
+                                radius: '55%',
+                                center: ['50%', '50%'],
+                                data: data.sort(function (a, b) {
+                                    return a.value - b.value;
+                                }),
+                                roseType: 'radius',
+                                label: {
+                                    color: '#000'
+                                },
+                                labelLine: {
+                                    lineStyle: {
+                                        color: '#000'
+                                    },
+                                    smooth: 0.2,
+                                    length: 10,
+                                    length2: 20
+                                },
+                                animationType: 'scale',
+                                animationEasing: 'elasticOut',
+                                animationDelay: function (idx) {
+                                    return Math.random() * 200;
+                                }
                             }
                         ]
-                    });
-                }//first-success
-            });//first-ajax
+                    };
+                    soldNumChart.setOption(option2);
+                    /*
+                    soldNumChart.on('click', function (params) {
+                        layui.use("layer", function () {
+                            parent.layer.open({
+                                type: 2,
+                                shadeClose: true,//点击遮罩关闭
+                                shade: [0.3, '#000', true],
+                                closeBtn: 0,//删除关闭按钮
+                                area: ['700px', '600px'],
+                                x: "center",
+                                y: "center",
+                            });
+                        })
+                    });*/
+                }
+            });
 
             //表3 所有表
             $.ajax({
                 type: "POST",
                 url: "/dataController/LZHcity",
                 success: function (msg) {
-                    var data = [], cnt = 1, j = 0;
+                    var name = [], value = [], cnt = 1, j = 0;
                     //console.log(msg);
                     for (i = 0; i < msg.length; i++) {
                         if (msg[i].cityName == d.substr(0, d.length - 1)) {
@@ -222,231 +277,483 @@
                         }
                     }
                     while (cnt <= 7) {
-                        var newData = {name: ' ', y: 11.84};
                         //console.log(newData);
                         if (cnt == 1) {
                             //新房售价
-                            newData.name = "新房售价(元/㎡)";
-                            newData.y = msg[j].citySoldprice;
+                            name.push("新房售价(元/㎡)");
+                            value.push(msg[j].citySoldprice);
                             cnt++;
-                            data.push(newData)
                             continue;
 
                         }
                         if (cnt == 2) {
                             //新房售数
-                            newData.name = "新房售数(间)";
-                            newData.y = msg[j].citySoldnum;
+                            name.push("新房售数(间)");
+                            value.push(msg[j].citySoldnum);
                             cnt++;
-                            data.push(newData)
                             continue;
 
                         }
                         if (cnt == 3) {
                             //租价
-                            newData.name = "租价(元/月)";
-                            newData.y = msg[j].cityRentprice;
+                            name.push("租价(元/月)");
+                            value.push(msg[j].cityRentprice);
                             cnt++;
-                            data.push(newData)
                             continue;
 
 
                         }
                         if (cnt == 4) {
                             //组数
-                            newData.name = "租数(间)";
-                            newData.y = msg[j].cityRentnum;
+                            name.push("租数(间)");
+                            value.push(msg[j].cityRentnum);
                             cnt++;
-                            data.push(newData)
                             continue;
 
                         }
                         if (cnt == 5) {
                             //职价
-                            newData.name = "职业平均工资(元/月)";
-                            newData.y = msg[j].averageTrendprice;
+                            name.push("职业平均工资(元/月)");
+                            value.push(msg[j].averageTrendprice);
                             cnt++;
-                            data.push(newData)
                             continue;
 
                         }
                         if (cnt == 6) {
                             //职数
-                            newData.name = "职业数量(人)";
-                            newData.y = msg[j].averageTrendnum;
+                            name.push("职业数量(人)");
+                            value.push(msg[j].averageTrendnum);
                             cnt++;
-                            data.push(newData)
                             continue;
                         }
                         if (cnt == 7) {
-                            printSecond(data);
+                            printSecond(name, value);
                             break;
                         }
 
                     }
+                    function printSecond(name, value) {
+                        var informationChart = echarts.init(document.getElementById('container_third'));
+                        <!--城区信息表-->
+                        var option3 = {
+                            title: {
+                                text: "城区信息表",
+                                subtext: 'Information of city'
+                            },
 
+                            xAxis: {
+                                data: name,
+                                textStyle: {
+                                    color: '#000'
+                                },
+                                axisTick: {
+                                    show: false
+                                },
+                                axisLine: {
+                                    show: false
+                                },
+                                axisLabel: {
+                                    rotate: 40
+                                }
+                            },
+                            yAxis: {
+                                axisLine: {
+                                    show: false
+                                },
+                                axisTick: {
+                                    show: false
+                                },
+                                axisLabel: {
+                                    textStyle: {
+                                        color: '#999'
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                            },
+                            dataZoom: [
+                                {
+                                    type: 'inside'
+                                }
+                            ],
+                            grid: {
+                                left: 50,
+                                top: 78,
+                                right: 40,
+                                bottom: 40,
+                            },
+                            series: [
+                                {
+                                    type: 'bar',
+                                    itemStyle: {
+                                        color: new echarts.graphic.LinearGradient(
+                                            0, 0, 0, 1,
+                                            [
+                                                {offset: 0, color: '#bce672'},
+                                                {offset: 0.5, color: '#9ed048'},
+                                                {offset: 1, color: '#96ce54'}
+                                            ]
+                                        )
+                                    },
+                                    emphasis: {
+                                        itemStyle: {
+                                            color: new echarts.graphic.LinearGradient(
+                                                0, 0, 0, 1,
+                                                [
+                                                    {offset: 1, color: '#83bff6'},
+                                                    {offset: 0.5, color: '#188df0'},
+                                                    {offset: 0, color: '#188df0'}
+                                                ]
+                                            )
+                                        }
+                                    },
+                                    data: value
+                                }
+                            ]
+                        };
+                        informationChart.setOption(option3);
+                        /*
+                        informationChart.on('click', function (params) {
+                            layui.use("layer", function(){
+                                parent.layer.open({
+                                    type: 2,
+                                    shadeClose: true,//点击遮罩关闭
+                                    shade: [0.3, '#000',true],
+                                    closeBtn:0,//删除关闭按钮
+                                    area: ['700px', '600px'],
+                                    x:"center",
+                                    y:"center",
+                                });
+                            })
+                        });*/
+                    }
                 }
-
-
             });
 
-            function printSecond(data) {
-                <!--城区 平均租价-->
-                Highcharts.chart('container_third', {
-                    chart: {
-                        type: 'column'
-                    },
-                    title: {
-                        text: '城市信息表'
-                    },
-                    subtitle: {
-                        text: 'AverageRentPrice'
-                    },
-                    xAxis: {
-                        type: 'category'
-                    },
-                    yAxis: {
+            //表4 城区售价排行
+            $.ajax({
+                type: "POST",
+                url: "/dataController/areaSold",
+                success: function (msg) {
+                    var districts = [];
+                    var areaSoldprice = [];
+                    for (i = 0; i < msg.length; i++) {
+                        if (msg[i].cityName == d.substr(0, d.length - 1)) {
+                            districts.push(msg[i].areaName);
+                            areaSoldprice.push(msg[i].areaSoldprice);
+                        }
+                    }
+                    var soldPriceChart = echarts.init(document.getElementById('container_forth'));
+                    var dataShadow = [];
+                    for (var i = 0; i < areaSoldprice.length; i++) {
+                        dataShadow.push(500);
+                    }
+                    <!--城区 售价排行-->
+                    var option4 = {
                         title: {
-                            text: ''
-                        }
+                            text: "售房价格排行",
+                            subtext: 'Sold price ranking in districts of city'
+                        },
 
-                    },
-                    legend: {
-                        enabled: false
-                    },
-                    plotOptions: {
-                        series: {
-                            borderWidth: 0,
-                            dataLabels: {
-                                enabled: true,
-                                format: '{point.y}'
+                        xAxis: {
+                            data: districts,
+                            textStyle: {
+                                color: '#000'
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLine: {
+                                show: false
+                            },
+                            axisLabel: {
+                                rotate: 40
                             }
+                        },
+                        yAxis: {
+                            axisLine: {
+                                show: false
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#999'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                        },
+                        dataZoom: [
+                            {
+                                type: 'inside'
+                            }
+                        ],
+                        grid:{
+                            left: 50,
+                            top: 78,
+                            right: 40,
+                            bottom: 40,
+                        },
+                        series: [
+                            {
+                                type: 'bar',
+                                itemStyle: {
+                                    color: 'rgba(0,0,0,0.05)'
+                                },
+                                barGap: '-100%',
+                                barCategoryGap: '40%',
+                                data: dataShadow,
+                                animation: false
+                            },
+                            {
+                                type: 'bar',
+                                itemStyle: {
+                                    color: new echarts.graphic.LinearGradient(
+                                        0, 0, 0, 1,
+                                        [
+                                            {offset: 0, color: '#bce672'},
+                                            {offset: 0.5, color: '#9ed048'},
+                                            {offset: 1, color: '#96ce54'}
+                                        ]
+                                    )
+                                },
+                                emphasis: {
+                                    itemStyle: {
+                                        color: new echarts.graphic.LinearGradient(
+                                            0, 0, 0, 1,
+                                            [
+                                                {offset: 1, color: '#83bff6'},
+                                                {offset: 0.5, color: '#188df0'},
+                                                {offset: 0, color: '#188df0'}
+                                            ]
+                                        )
+                                    }
+                                },
+                                data: areaSoldprice
+                            }
+                        ]
+                    };
+                    soldPriceChart.setOption(option4);
+                    /*
+                    soldPriceChart.on('click', function (params) {
+                        layui.use("layer", function(){
+                            parent.layer.open({
+                                type: 2,
+                                shadeClose: true,//点击遮罩关闭
+                                shade: [0.3, '#000',true],
+                                closeBtn:0,//删除关闭按钮
+                                area: ['700px', '600px'],
+                                x:"center",
+                                y:"center",
+                            });
+                        })
+                    });*/
+                }
+            });
+
+            //表5. 城区-职数表
+            $.ajax({
+                type: "POST",
+                url: "/dataController/Trend",
+                success: function (msg) {
+                    var occupation = [];
+                    var salary = [];
+                    for (i = 0; i < msg.length; i++) {
+                        if (msg[i].cityName == d.substr(0, d.length - 1)) {
+                            occupation.push(msg[i].trendName);
+                            salary.push(msg[i].trendPrice);
                         }
-                    },
+                    }
+                    var salaryChart = echarts.init(document.getElementById('container_fifth'));
+                    <!--城区 工资表-->
+                    var option5 = {
+                        title: {
+                            text: "职业工资排行",
+                            subtext: 'Salary ranking of occupation'
+                        },
 
-                    tooltip: {
-                        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-                    },
+                        xAxis: {
+                            data: occupation,
+                            textStyle: {
+                                color: '#000'
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLine: {
+                                show: false
+                            },
+                            axisLabel: {
+                                rotate: 40
+                            }
+                        },
+                        yAxis: {
+                            axisLine: {
+                                show: false
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#999'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                        },
+                        dataZoom: [
+                            {
+                                type: 'inside'
+                            }
+                        ],
+                        grid:{
+                            left: 50,
+                            top: 78,
+                            right: 40,
+                            bottom: 40,
+                        },
+                        series: [
+                            {
+                                type: 'bar',
+                                itemStyle: {
+                                    color: new echarts.graphic.LinearGradient(
+                                        0, 0, 0, 1,
+                                        [
+                                            {offset: 1, color: '#F5A9A9'},
+                                            {offset: 0.5, color: '#FE2E2E'},
+                                            {offset: 0, color: '#DF0101'}
+                                        ]
+                                    )
+                                },
+                                emphasis: {
+                                    itemStyle: {
+                                        color: new echarts.graphic.LinearGradient(
+                                            0, 0, 0, 1,
+                                            [
+                                                {offset: 0, color: '#bce672'},
+                                                {offset: 0.5, color: '#9ed048'},
+                                                {offset: 1, color: '#96ce54'}
+                                            ]
+                                        )
+                                    }
+                                },
+                                data: salary
+                            }
+                        ]
+                    };
+                    salaryChart.setOption(option5);
+                    /*
+                    salaryChart.on('click', function (params) {
+                        layui.use("layer", function(){
+                            parent.layer.open({
+                                type: 2,
+                                shadeClose: true,//点击遮罩关闭
+                                shade: [0.3, '#000',true],
+                                closeBtn:0,//删除关闭按钮
+                                area: ['700px', '600px'],
+                                x:"center",
+                                y:"center",
+                            });
+                        })
+                    });*/
+                }
+            });//ajax
 
-                    series: [
-                        {
-                            name: "TOP10",
-                            colorByPoint: true,
-                            data: data
-                        }
-                    ]
-                });
-            }
-
-            //表4 城区 售价表
-
-            //表5.表6 城区-职数-职价表
+            //表6 城区-职价表
             $.ajax({
                 type: "POST",
                 url: "/dataController/Trend",
                 success: function (msg) {
                     var data = [];
                     for (i = 0; i < msg.length; i++) {
-                        var newData = {name: ' ', y: 11.84};
+                        var newData = {name: ' ', value: 11.84};
                         if (msg[i].cityName == d.substr(0, d.length - 1)) {
-                            newData.name = msg[i].cityName + "-" + msg[i].trendName;
-                            newData.y = msg[i].trendPrice;
+                            newData.name = msg[i].trendName;
+                            newData.value = msg[i].trendNum;
                             data.push(newData)
                         }
                     }
-                    <!--城区 平均租价-->
-                    Highcharts.chart('container_fifth', {
-                        chart: {
-                            type: 'column'
-                        },
+                    var occupationChart = echarts.init(document.getElementById('container_sixth'));
+                    <!--职业占比-->
+                    var option6 = {
                         title: {
-                            text: '职业工资排行'
-                        },
-                        subtitle: {
-                            text: 'Salary'
-                        },
-                        xAxis: {
-                            type: 'category'
-                        },
-                        yAxis: {
-                            title: {
-                                text: '工资（元/月）'
-                            }
-
-                        },
-                        legend: {
-                            enabled: false
-                        },
-                        plotOptions: {
-                            series: {
-                                borderWidth: 0,
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '{point.y}'
-                                }
-                            }
-                        },
-
-                        tooltip: {
-                            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-                        },
-
-                        series: [
-                            {
-                                name: "TOP10",
-                                colorByPoint: true,
-                                data: data
-                            }
-                        ]
-
-                    });
-
-                    data = [];
-                    for (i = 0; i < msg.length; i++) {
-                        newData = {name: ' ', y: 11.84};
-                        if (msg[i].cityName == d.substr(0, d.length - 1)) {
-                            newData.name = msg[i].cityName + "-" + msg[i].trendName;
-                            newData.y = msg[i].trendNum;
-                            data.push(newData)
-                        }
-                    }
-                    //表2 表4 城市平均售数量 城市平均售价
-                    Highcharts.chart('container_sixth', {
-                        chart: {
-                            plotBackgroundColor: null,
-                            plotBorderWidth: null,
-                            plotShadow: false,
-                            type: 'pie'
-                        },
-                        title: {
-                            text: '软件相关职业方向份额'
+                            text: '职位份额',
+                            subtext: 'Share of occupation in the city',
                         },
                         tooltip: {
                             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
                         },
-                        plotOptions: {
-                            pie: {
-                                allowPointSelect: true,
-                                cursor: 'pointer',
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                                    style: {
-                                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                                    }
-                                }
+                        visualMap: {
+                            show: false,
+                            min: 80,
+                            max: 600,
+                            inRange: {
+                                colorLightness: [0, 0.5]
                             }
                         },
-                        series: [{
-                            name: 'Brands',
-                            colorByPoint: true,
-                            data: data
-                        }]
-                    });
+                        grid: {
+                            left: 50,
+                            top: 78,
+                            right: 40,
+                            bottom: 40,
+                        },
+                        color : [ '#00FFFF', '#00FF00', '#667EEA', '#FF8C00' ],
+                        series: [
+                            {
+                                name: '职位份额',
+                                type: 'pie',
+                                radius: '55%',
+                                center: ['50%', '50%'],
+                                data: data.sort(function (a, b) {
+                                    return a.value - b.value;
+                                }),
+                                roseType: 'radius',
+                                label: {
+                                    color: '#255'
+                                },
+                                labelLine: {
+                                    lineStyle: {
+                                        color: '#255'
+                                    },
+                                    smooth: 0.2,
+                                    length: 10,
+                                    length2: 20
+                                },
+                                animationType: 'scale',
+                                animationEasing: 'elasticOut',
+                                animationDelay: function (idx) {
+                                    return Math.random() * 200;
+                                }
+                            }
+                        ]
+                    };
+                    occupationChart.setOption(option6);
+                    /*
+                    occupationChart.on('click', function (params) {
+                        layui.use("layer", function () {
+                            parent.layer.open({
+                                type: 2,
+                                shadeClose: true,//点击遮罩关闭
+                                shade: [0.3, '#000', true],
+                                closeBtn: 0,//删除关闭按钮
+                                area: ['700px', '600px'],
+                                x: "center",
+                                y: "center",
+                            });
+                        })
+                    });*/
                 }
             });//ajax
+
         });//documet.readyfunction
 
     }//function
