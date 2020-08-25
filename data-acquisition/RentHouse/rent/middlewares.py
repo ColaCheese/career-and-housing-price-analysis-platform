@@ -6,6 +6,23 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+import random
+
+# class ProxyMiddleware(object):
+#     '''
+#     设置Proxy
+#     '''
+#
+#     def __init__(self, ip):
+#         self.ip = ip
+#
+#     @classmethod
+#     def from_crawler(cls, crawler):
+#         return cls(ip=crawler.settings.get('PROXIES'))
+#
+#     def process_request(self, request, spider):
+#         ip = random.choice(self.ip)
+#         request.meta['proxy'] = ip
 
 
 class RentSpiderMiddleware(object):

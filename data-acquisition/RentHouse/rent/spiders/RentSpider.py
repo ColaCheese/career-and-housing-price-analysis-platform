@@ -1,4 +1,5 @@
 import scrapy
+import time
 from ..items import RentItem  # 引入items/DouBanSpiderItem类
 
 
@@ -37,8 +38,8 @@ class RentSpider(scrapy.Spider):
 
         # 创建实例 item用于保存字典
         item = RentItem()
-        # print(response.body)
         # 打印
+        time.sleep(0.5)
         all = response.xpath('//div[@class="content__list--item--main"]')
         number = response.xpath(
             '//span[@class="content__title--hl"]/text()').extract()[0]
@@ -49,7 +50,6 @@ class RentSpider(scrapy.Spider):
 
             location = each.xpath(
                 'p[@class="content__list--item--des"]/a/text()')
-
 
             if price and len(price.extract()[0]) < 7:
                 item['price'] = price.extract()[0]
@@ -76,10 +76,11 @@ class RentSpider(scrapy.Spider):
             # 翻页
             yield scrapy.Request('https://%s.zu.ke.com/zufang/pg%s/#contentList' % (
                 self.citys[self.cnt][1], next),
-                callback=self.parse)
+                                 callback=self.parse)
         else:
             self.cnt += 1
             if self.cnt <= self.max:
-                yield scrapy.Request('https://%s.zu.ke.com/zufang/pg1/#contentList' % (self.citys[self.cnt][1]), callback=self.parse)
+                yield scrapy.Request('https://%s.zu.ke.com/zufang/pg1/#contentList' % (self.citys[self.cnt][1]),
+                                     callback=self.parse)
             else:
                 print("finish")

@@ -10,8 +10,7 @@ import scrapy
 
 class RentItem(scrapy.Item):
     # define the fields for your item here like:
-    price = scrapy.Field() #租金
-    location = scrapy.Field() #区域
+    price = scrapy.Field()  # 租金
+    location = scrapy.Field()  # 区域
     city = scrapy.Field()  # 城市名字
-    number = scrapy.Field() #总数
-
+    number = scrapy.Field()  # 总数
