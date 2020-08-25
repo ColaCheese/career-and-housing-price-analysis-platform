@@ -20,9 +20,21 @@ USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTM
 FEED_EXPORT_ENCODING = 'utf-8'
 
 
+# define MongoDB settings
+MONGO_URI = '47.99.179.33'
+MONGO_DB = 'rentHouse'
+MONGO_USER = 'admin'
+MONGO_PWD = 'root'
 # Obey robots.txt rules
-# ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
+# DOWNLOADER_MIDDLEWARES = {
+#     'rent.middlewares.ProxyMiddleware': 543,
+# }
+#
+# PROXIES = [
+#     "http://61.135.185.38:80"
+# ]
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
 

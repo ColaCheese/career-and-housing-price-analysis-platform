@@ -1,3 +1,3 @@
 from scrapy import cmdline
 
-cmdline.execute("scrapy crawl rent -o result.json".split())
+cmdline.execute("scrapy crawl rent".split())
