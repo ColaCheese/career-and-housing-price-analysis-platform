@@ -4,13 +4,57 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>layout 后台大布局 - Layui</title>
     <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+    <style>
+
+        .homepage-hero-module {
+            border-right: none;
+            border-left: none;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-container {
+            position: relative;
+            bottom: 0%;
+            left: 0%;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .video-container .filter {
+            z-index:2000;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-container video {
+            position: absolute;
+            z-index: 1000;
+            bottom: 0;
+        }
+
+    </style>
 </head>
 <body class="layui-layout-body">
-<div class="layui-layout layui-layout-admin">
-    <div class="layui-body" style="margin-top: 20%;">
-        <h style="font-size: 40px;margin-left: 20%;color: #00aebd;">欢迎使用职业与房价分析平台</h>
+<div class="layui-body">
+    <div class="homepage-hero-module">
+    <div class="video-container">
+        <div class="filter">
+            <h style="font-size: 50px;color: whitesmoke;letter-spacing: 18px; font-weight: bolder">欢迎使用职业与房价分析平台</h>
+        </div>
+        <img th:src="@{/other/coverr1.jpg}" width="100%" />
     </div>
 </div>
+</div>
+
 </body>
 <script>
 //JavaScript代码区域
