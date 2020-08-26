@@ -21,7 +21,7 @@ FEED_EXPORT_ENCODING = 'utf-8'
 
 # MONGO_DB配置
 MONGO_URI = '47.99.179.33'
-MONGO_DB = 'soldHouse'
+MONGO_DB = 'career'
 MONGO_USER = 'admin'
 MONGO_PWD = 'root'
 
