@@ -15,7 +15,9 @@
                 <a class="layui-btn btn-add btn-default" id="btn-add" lay-submit="" lay-filter="btn-add">添加管理员</a>
             </span>
         </div>
+        <div style="display: flex; justify-content: center;">
         <table id="menu" lay-filter="test"></table>
+        </div>
     </div>
 </div>
 <script>
@@ -25,12 +27,14 @@ layui.use('element', function(){
 
 });
 
+
 layui.use(['table','form'], function(){
   var table = layui.table;
   var form = layui.form;
   table.render({
     elem: '#menu'
-    ,height: 480
+    ,height: 400
+    ,width:310
     ,url: '/manage_userController/getadmin' //数据接口
     ,limit:5//要传向后台的每页显示条数
     //,page:true(自带的这个要注掉)
@@ -43,9 +47,9 @@ layui.use(['table','form'], function(){
     //,page: true //开启分页
 
     ,cols: [  [ //表头
-       {field: 'name', title: '管理员账号', width:160, fixed: 'left'}
-      ,{field: 'password', title: '密码', width: 160, }
-      ,{field: 'roleName', title: '角色名称', width: 160}
+       {field: 'name', title: '管理员账号', width:160, fixed: 'middle'}
+/*      ,{field: 'password', title: '密码', width: 160, }
+      ,{field: 'roleName', title: '角色名称', width: 160}*/
       ,{fixed: 'right', width:150, align:'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
     ]]
   });
@@ -159,7 +163,7 @@ table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test�
                    type:'POST',
                    data:{
                    name:massage.field.newname,
-                   password:massage.field.newpassword,
+                   /*password:massage.field.newpassword,*/
                    },
                    success:function (msg) {
                        //var returnCode = msg.returnCode;//取得返回数据（Sting类型的字符串）的信息进行取值判断

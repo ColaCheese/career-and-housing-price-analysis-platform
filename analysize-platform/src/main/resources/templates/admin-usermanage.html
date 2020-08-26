@@ -9,8 +9,10 @@
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/js/jquery.min.js}"></script>
 <div class="layui-layout layui-layout-admin">
-    <div class="layui-body"  style="margin-top: 30px;left: 0px;top: 0px;">
+    <div class="layui-body"  style="margin-top: 30px;left: 0px;top: 50px;">
+        <div style="display: flex; justify-content: center;">
         <table id="menu" lay-filter="test"></table>
+        </div>
     </div>
 </div>
 
@@ -20,13 +22,12 @@ layui.use('element', function(){
   var element = layui.element;
 
 });
-
 layui.use(['table','form'], function(){
   var table = layui.table;
   var form = layui.form;
   table.render({
     elem: '#menu'
-    ,height: 480
+    ,height: 400
     ,url: '/manage_userController/getuser' //数据接口
     ,limit:5//要传向后台的每页显示条数
     //,page:true(自带的这个要注掉)
