@@ -15,7 +15,9 @@
                 <a class="layui-btn btn-add btn-default" id="btn-add" lay-submit="" lay-filter="btn-add">添加</a>
             </span>
         </div>
+        <div style="display: flex; justify-content: center;">
         <table id="menu" lay-filter="test"></table>
+        </div>
     </div>
 </div>
 <script>
@@ -24,12 +26,13 @@ layui.use('element', function(){
   var element = layui.element;
 
 });
+
 layui.use(['table','form'], function(){
   var table = layui.table;
   var form = layui.form;
   table.render({
     elem: '#menu'
-    ,height: 480
+    ,height: 400
     ,url: '/analysismanageController/getdata' //数据接口
     ,limit:5//要传向后台的每页显示条数
     //,page:true(自带的这个要注掉)

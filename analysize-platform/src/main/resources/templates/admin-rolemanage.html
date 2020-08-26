@@ -13,19 +13,23 @@
 <div class="layui-layout layui-layout-admin">
     <div class="layui-body"  style="margin-top: 30px;left: 0px;top: 0px;">
         <div class="my-btn-box" style="padding-left: 10px;padding-top: 10px;">
-            <span class="fl">
+            <span class="fl" style=>
                 <a class="layui-btn btn-add btn-default" id="btn-add" lay-submit="" lay-filter="btn-add">添加角色</a>
             </span>
         </div>
-        <table id="menu" lay-filter="test"></table>
+        <div style="display: flex; justify-content: center;">
+            <table id="menu" lay-filter="test"></table>
+        </div>
     </div>
 </div>
+<div style="text-align: center">
 <script>
 //JavaScript代码区域
 layui.use('element', function(){
   var element = layui.element;
 
 });
+
 layui.config({
 base: './layuiadmin/' //静态资源所在路径
   }).extend({
@@ -36,7 +40,7 @@ base: './layuiadmin/' //静态资源所在路径
   var dtree = layui.dtree;
   table.render({
     elem: '#menu'
-    ,height: 480
+    ,height: 300
     ,url: '/roleController/getrole' //数据接口
     ,limit:5//要传向后台的每页显示条数
     //,page:true(自带的这个要注掉)
@@ -48,9 +52,9 @@ base: './layuiadmin/' //静态资源所在路径
       }
 
     ,cols: [  [ //表头
-      {field: 'roleID', title: 'ID', width:80, sort: true, fixed: 'left'}
-      ,{field: 'roleName', title: '角色名称', width:160}
-      ,{field: 'roleIntro', title: '角色描述', width:240}
+      {field: 'roleID', title: 'ID', width:150, sort: true, fixed: 'left'}
+      ,{field: 'roleName', title: '角色名称', width:200}
+/*      ,{field: 'roleIntro', title: '角色描述', width:240}*/
       ,{fixed: 'right', width:150, align:'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
     ]]
   });
@@ -206,13 +210,14 @@ table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test�
        }
 })
 </script>
+
 <script type="text/html" id="barOption">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑权限</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+<!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
 </script>
 <!--这里是修改弹出层的表单信息,表单的id用于表单的选择，style是在本页隐藏，只有点击编辑才会弹出-->
 
-<div class="layui-row" id="popinsertTest" style="display:none;">
+<div class="layui-row" id="popinsertTest" style="display: none; text-align: center">
     <div class="layui-col-md10">
         <form class="layui-form layui-from-pane" action="" style="margin-top:20px" >
             <div class="layui-form-item">
@@ -221,12 +226,12 @@ table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test�
                     <input type="text" name="newroleName" id="newroleName"  required  lay-verify="required" placeholder="输入角色名称" autocomplete="off" class="layui-input">
                 </div>
             </div>
-            <div class="layui-form-item">
+<!--            <div class="layui-form-item">
                 <label class="layui-form-label">角色描述</label>
                 <div class="layui-input-block">
                     <input type="text" name="newroleIntro" id="newroleIntro"  required  lay-verify="required" autocomplete="off" placeholder="输入角色描述" class="layui-input">
                 </div>
-            </div>
+            </div>-->
 
             <div class="layui-form-item" style="margin-top:40px">
                 <div class="layui-input-block">
