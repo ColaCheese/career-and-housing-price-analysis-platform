@@ -11,13 +11,6 @@
     <script th:src="@{layui/lay/modules/layer.js}"></script>
     <link th:href="@{layui/css/layui.css}" rel="stylesheet"/>
     <style>
-        html, body {
-            height: 100%;
-        }
-        body {
-            overflow-y: scroll;
-            overflow-x: scroll;
-        }
         #box {
             height: 100%;
             width: 100%;
@@ -34,13 +27,15 @@
 
 </head>
 
-<body>
+<body class="layui-layout-body">
+<div class="layui-body" style="left:25px;padding-top: 23px;overflow: hidden">
     <div id="box">
-    <div id="rentPrice" class="chart"></div>
-    <div id="rentNum" class="chart" ></div>
-    <div id="soldPrice" class="chart"></div>
-    <div id="soldNum" class="chart"></div>
+        <div id="rentPrice" class="chart"></div>
+        <div id="rentNum" class="chart" ></div>
+        <div id="soldPrice" class="chart"></div>
+        <div id="soldNum" class="chart"></div>
     </div>
+</div>
 </body>
 
 <script>
