@@ -5,11 +5,10 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <title>主页</title>
+    <base href="/">
     <script th:src="@{js/jquery.min.js}"></script>
     <script th:src="@{framework/Echarts/code/modules/echarts-en.js}"></script>
     <script th:src="@{layui/layui.js}"></script>
-    <script th:src="@{layui/lay/modules/layer.js}"></script>
-    <link th:href="@{layui/css/layui.css}" rel="stylesheet"/>
     <style>
         html, body {
             height: 100%;
@@ -35,16 +34,17 @@
 </head>
 
 <body>
-    <div id="box">
+<div id="box">
     <div id="rentPrice" class="chart"></div>
     <div id="rentNum" class="chart" ></div>
     <div id="soldPrice" class="chart"></div>
     <div id="soldNum" class="chart"></div>
-    </div>
+</div>
 </body>
 
 <script>
-    let district = [];
+    let district1 = [];
+    let district2 = [];
     let rentPrice = [];
     let rentNum = [];
     let soldPrice = [];
@@ -55,7 +55,7 @@
             url: "/dataController/Drent",
             success: function (msg) {
                 for (let i = 0; i < msg.length; i++) {
-                    district.push(msg[i].districtName);
+                    district1.push(msg[i].districtName);
                     rentPrice.push(msg[i].districtRentprice);
                     rentNum.push(msg[i].districtRentnum);
                 }
@@ -74,7 +74,7 @@
                     },
 
                     xAxis: {
-                        data: district,
+                        data: district1,
                         textStyle: {
                             color: '#000'
                         },
@@ -198,13 +198,13 @@
                             radius: '55%',
                             center: ['50%', '50%'],
                             data: [
-                                {value: rentNum[0], name: district[0]},
-                                {value: rentNum[1], name: district[1]},
-                                {value: rentNum[2], name: district[2]},
-                                {value: rentNum[3], name: district[3]},
-                                {value: rentNum[4], name: district[4]},
-                                {value: rentNum[5], name: district[5]},
-                                {value: rentNum[6], name: district[6]}
+                                {value: rentNum[0], name: district1[0]},
+                                {value: rentNum[1], name: district1[1]},
+                                {value: rentNum[2], name: district1[2]},
+                                {value: rentNum[3], name: district1[3]},
+                                {value: rentNum[4], name: district1[4]},
+                                {value: rentNum[5], name: district1[5]},
+                                {value: rentNum[6], name: district1[6]}
                             ].sort(function (a, b) {
                                 return a.value - b.value;
                             }),
@@ -229,21 +229,21 @@
                 rentNumChart.setOption(option2);
 
                 rentPriceChart.on('click', function () {
-                        layui.use("layer", function(){
-                            window.top.layer.open({
-                                type: 1,
-                                shadeClose: true,//点击遮罩关闭
-                                shade: [0.3, '#000',true],
-                                closeBtn:0,//删除关闭按钮
-                                title: false,//删除标题
-                                area: ['1200px', '800px'],
-                                content:'<div id="fullChart" style="height:100%;width:100%;"></div>',
-                                success:function(){
-                                    let full = echarts.init(window.top.document.getElementById('fullChart'));
-                                    full.setOption(option1);
-                                }
-                            });
-                        })
+                    layui.use("layer", function(){
+                        window.top.layer.open({
+                            type: 1,
+                            shadeClose: true,//点击遮罩关闭
+                            shade: [0.3, '#000',true],
+                            closeBtn:0,//删除关闭按钮
+                            title: false,//删除标题
+                            area: ['1200px', '800px'],
+                            content:'<div id="fullChart" style="height:100%;width:100%;"></div>',
+                            success:function(){
+                                let full = echarts.init(window.top.document.getElementById('fullChart'));
+                                full.setOption(option1);
+                            }
+                        });
+                    })
                 });
                 rentNumChart.on('click', function () {
                     layui.use("layer", function(){
@@ -271,6 +271,7 @@
             url: "/dataController/Dsold",
             success: function (msg) {
                 for (let i = 0; i < msg.length; i++) {
+                    district2.push(msg[i].districtName);
                     soldPrice.push(msg[i].districtSoldprice);
                     soldNum.push(msg[i].districtSoldnum);
                 }
@@ -288,7 +289,7 @@
                     },
 
                     xAxis: {
-                        data: district,
+                        data: district2,
                         textStyle: {
                             color: '#000'
                         },
@@ -411,13 +412,13 @@
                             radius: '55%',
                             center: ['50%', '50%'],
                             data: [
-                                {value: soldNum[0], name: district[0]},
-                                {value: soldNum[1], name: district[1]},
-                                {value: soldNum[2], name: district[2]},
-                                {value: soldNum[3], name: district[3]},
-                                {value: soldNum[4], name: district[4]},
-                                {value: soldNum[5], name: district[5]},
-                                {value: soldNum[6], name: district[6]}
+                                {value: soldNum[0], name: district2[0]},
+                                {value: soldNum[1], name: district2[1]},
+                                {value: soldNum[2], name: district2[2]},
+                                {value: soldNum[3], name: district2[3]},
+                                {value: soldNum[4], name: district2[4]},
+                                {value: soldNum[5], name: district2[5]},
+                                {value: soldNum[6], name: district2[6]}
                             ].sort(function (a, b) {
                                 return a.value - b.value;
                             }),
