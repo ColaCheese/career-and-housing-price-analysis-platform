@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" ;>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>职业与房价分析平台</title>
     <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
 </head>
@@ -9,8 +9,8 @@
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/js/jquery.min.js}"></script>
 <div class="layui-layout layui-layout-admin">
-    <div class="layui-body" style="margin-top: 30px;left: 0px;top: 0px;">
-        <div class="my-btn-box" style="padding-left: 10px;padding-top: 10px;">
+    <div class="layui-body"  style="margin-top: 30px;left: 0;top: 0;bottom: 0;">
+        <div class="my-btn-box" style="padding-left: 307px;padding-top: 10px;padding-bottom: 10px;">
             <span class="fl">
                 <a class="layui-btn btn-add btn-default" id="btn-add" lay-submit="" lay-filter="btn-add">添加管理员</a>
             </span>
@@ -22,47 +22,45 @@
 </div>
 <script>
     //JavaScript代码区域
-    layui.use('element', function () {
+    layui.use('element', function(){
         var element = layui.element;
 
     });
 
-
-    layui.use(['table', 'form'], function () {
+    layui.use(['table','form'], function(){
         var table = layui.table;
         var form = layui.form;
         table.render({
             elem: '#menu'
-            , height: 400
-            , width: 310
-            , url: '/manage_userController/getadmin' //数据接口
-            , limit: 5//要传向后台的每页显示条数
+            ,height: 445
+            ,url: '/manage_userController/getadmin' //数据接口
+            ,limit:8//要传向后台的每页显示条数
             //,page:true(自带的这个要注掉)
-            , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+            ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
                 layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']//自定义分页布局
-                , limits: [5, 10]
-                , first: false //不显示首页
-                , last: false //不显示尾页
+                ,limits:[8,16]
+                ,first: false //不显示首页
+                ,last: false //不显示尾页
             }
             //,page: true //开启分页
 
-            , cols: [[ //表头
-                {field: 'name', title: '管理员账号', width: 160, fixed: 'middle'}
-                /*      ,{field: 'password', title: '密码', width: 160, }
-                      ,{field: 'roleName', title: '角色名称', width: 160}*/
-                , {fixed: 'right', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+            ,cols: [  [ //表头
+                {field: 'name', title: '管理员账号', width:160, fixed: 'left',align:'center'}
+                 ,{field: 'password', title: '密码', width: 240, align:'center'}
+                ,{field: 'roleName', title: '角色名称', width: 160,align:'center'}
+                ,{fixed: 'right', width:160, align:'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
         });
 
         //监听工具条
-        table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-                                                //console.log('hello');
+        table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                                              //console.log('hello');
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             var tr = obj.tr; //获得当前行 tr 的DOM对象
-            if (layEvent === 'del') { //删除ok
+            if(layEvent === 'del'){ //删除ok
                 //console.log('del');
-                layer.confirm('确认删除', function (index) {
+                layer.confirm('确认删除', function(index){
                     $.ajax({
                         url: "/manage_userController/deleteadmin",
                         type: "POST",
@@ -83,7 +81,7 @@
                     });
                     return false;
                 });
-            } else if (layEvent === 'edit') { //编辑//ok
+            } else if(layEvent === 'edit'){ //编辑//ok
                 console.log('edit');
                 layer.open({
                     //layer提供了5种层类型。可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
@@ -91,43 +89,42 @@
                     title: "修改菜单信息",
                     area: ['500px', '300px'],
                     content: $("#popUpdateTest"),//引用的弹出层的页面层的方式加载修改界面表单'kslfms'
-                    success: function (layero, index) {
-                        $("#name").attr("value", data.name);
-                        $("#password").attr("value", data.password);
+                    success:function (layero ,index) {
+                        $("#name").attr("value",data.name);
+                        $("#password").attr("value",data.password);
                         var mask = $(".layui-layer-shade");
                         mask.appendTo(layero.parent());
                     },
                 });
                 //动态向表传递赋值可以参看文章进行修改界面的更新前数据的显示，当然也是异步请求的要数据的修改数据的获取
-                setFormValue(obj, data);
+                setFormValue(obj,data);
             }
         });
-
         //监听弹出框表单提交，massage是修改界面的表单数据'submit(demo11),是修改按钮的绑定//ok
-        function setFormValue(obj, data) {
-            form.on('submit(demo11)', function (massage) {
+        function setFormValue(obj,data){
+            form.on('submit(demo11)', function(massage) {
                 //console.log('demoll');
                 $.ajax({
-                    url: '/manage_userController/updateadmin',
-                    type: 'POST',
-                    data: {name: data.name, password: massage.field.password,},
-                    success: function (msg) {
+                    url:'/manage_userController/updateadmin',
+                    type:'POST',
+                    data:{name: data.name,password:massage.field.password,},
+                    success:function (msg) {
                         //var returnCode = msg.returnCode;//取得返回数据（Sting类型的字符串）的信息进行取值判断
                         var json = JSON.parse(msg);
                         var returnCode = json.returnCode;
                         var pass = json.returnpass;
-                        if (returnCode == 200) {
+                        if(returnCode==200){
                             layer.closeAll('loading');
                             layer.load(2);
                             layer.msg("修改成功", {icon: 6});
-                            setTimeout(function () {
+                            setTimeout(function(){
                                 obj.update({
-                                    password: pass,
+                                    password:pass,
                                 });//修改成功修改表格数据不进行跳转
                                 layer.closeAll();//关闭所有的弹出层
                             }, 1000);
                             //加载层-风格
-                        } else {
+                        }else{
                             layer.msg("修改失败", {icon: 5});
                         }
                     }
@@ -145,7 +142,7 @@
                 area: ['500px', '300px'],
                 shadeClose: false, //点击遮罩不会关闭
                 content: $("#popinsertTest"),
-                success: function (layero) {
+                success:function(layero){
                     var mask = $(".layui-layer-shade");
                     mask.appendTo(layero.parent());
                     //其中：layero是弹层的DOM对象
@@ -155,40 +152,40 @@
             insertFormValue();
         });
 
-        function insertFormValue() {
-            form.on('submit(insert)', function (massage) {
+        function insertFormValue(){
+            form.on('submit(insert)', function(massage) {
                 //console.log('insert');
                 //console.log(massage.field.newname);
                 $.ajax({
-                    url: '/manage_userController/insertadmin',
-                    type: 'POST',
-                    data: {
-                        name: massage.field.newname,
+                    url:'/manage_userController/insertadmin',
+                    type:'POST',
+                    data:{
+                        name:massage.field.newname,
                         /*password:massage.field.newpassword,*/
                     },
-                    success: function (msg) {
+                    success:function (msg) {
                         //var returnCode = msg.returnCode;//取得返回数据（Sting类型的字符串）的信息进行取值判断
                         var json = JSON.parse(msg);
                         var returnCode = json.returnCode;
-                        if (returnCode == 200) {
+                        if(returnCode == 200){
                             layer.closeAll('loading');
                             layer.load(2);
                             layer.msg("添加成功", {icon: 6});
-                            setTimeout(function () {
+                            setTimeout(function(){
                                 AddData = [];
-                                var data1 = {
-                                    name: massage.field.name,
-                                    password: massage.field.password,
-                                    roleName: "管理员"
+                                var data1={
+                                    name:massage.field.name,
+                                    password:massage.field.password,
+                                    roleName:"管理员"
                                 };
                                 AddData.push(data1);
-                                table.reload('menu', {
-                                    data: AddData
+                                table.reload('menu',{
+                                    data : AddData
                                 });
                                 layer.closeAll();//关闭所有的弹出层
                             }, 1000);
                             //加载层-风格
-                        } else {
+                        }else{
                             layer.msg("添加失败", {icon: 5});
                         }
                     }
@@ -208,19 +205,17 @@
 <!--这里是修改弹出层的表单信息,表单的id用于表单的选择，style是在本页隐藏，只有点击编辑才会弹出-->
 <div class="layui-row" id="popUpdateTest" style="display:none;">
     <div class="layui-col-md10">
-        <form class="layui-form layui-from-pane" action="" style="margin-top:20px">
+        <form class="layui-form layui-from-pane" action="" style="margin-top:20px" >
             <div class="layui-form-item">
                 <label class="layui-form-label">管理员账户</label>
                 <div class="layui-input-block">
-                    <input type="text" name="name" id="name" required lay-verify="required" autocomplete="off" value=""
-                           class="layui-input" disabled="true">
+                    <input type="text" name="name" id="name"  required  lay-verify="required" autocomplete="off" value="" class="layui-input" disabled="true">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">管理员密码</label>
                 <div class="layui-input-block">
-                    <input type="text" name="password" id="password" required lay-verify="required" autocomplete="off"
-                           value="" class="layui-input">
+                    <input type="text" name="password" id="password"  required  lay-verify="required" autocomplete="off" value="" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item" style="margin-top:40px">
@@ -235,19 +230,17 @@
 <!--这里是修改弹出层的表单信息,表单的id用于表单的选择，style是在本页隐藏，只有点击编辑才会弹出-->
 <div class="layui-row" id="popinsertTest" style="display:none;">
     <div class="layui-col-md10">
-        <form class="layui-form layui-from-pane" action="" style="margin-top:20px">
+        <form class="layui-form layui-from-pane" action="" style="margin-top:20px" >
             <div class="layui-form-item">
                 <label class="layui-form-label">管理员账户</label>
                 <div class="layui-input-block">
-                    <input type="text" name="newname" id="newname" required lay-verify="required" placeholder="输入管理员账户"
-                           autocomplete="off" class="layui-input">
+                    <input type="text" name="newname" id="newname"  required  lay-verify="required" placeholder="输入管理员账户" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">密码</label>
                 <div class="layui-input-block">
-                    <input type="text" name="newpassword" id="newpassword" autocomplete="off" lay-verify="required"
-                           placeholder="输入密码" class="layui-input">
+                    <input type="text" name="newpassword" id="newpassword" autocomplete="off" lay-verify="required" placeholder="输入密码" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item" style="margin-top:40px">
