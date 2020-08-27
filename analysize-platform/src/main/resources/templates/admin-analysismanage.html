@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"; >
+<html xmlns:th="http://www.thymeleaf.org" ;>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>职业与房价分析平台</title>
     <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
 </head>
@@ -9,60 +9,60 @@
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/js/jquery.min.js}"></script>
 <div class="layui-layout layui-layout-admin">
-    <div class="layui-body"  style="margin-top: 30px;left: 0px;top: 0px;">
+    <div class="layui-body" style="margin-top: 30px;left: 0px;top: 0px;">
         <div class="my-btn-box" style="padding-left: 10px;padding-top: 10px;">
             <span class="fl">
                 <a class="layui-btn btn-add btn-default" id="btn-add" lay-submit="" lay-filter="btn-add">添加</a>
             </span>
         </div>
         <div style="display: flex; justify-content: center;">
-        <table id="menu" lay-filter="test"></table>
+            <table id="menu" lay-filter="test"></table>
         </div>
     </div>
 </div>
 <script>
-//JavaScript代码区域
-layui.use('element', function(){
-  var element = layui.element;
+    //JavaScript代码区域
+    layui.use('element', function () {
+        var element = layui.element;
 
-});
+    });
 
-layui.use(['table','form'], function(){
-  var table = layui.table;
-  var form = layui.form;
-  table.render({
-    elem: '#menu'
-    ,height: 400
-    ,url: '/analysismanageController/getdata' //数据接口
-    ,limit:5//要传向后台的每页显示条数
-    //,page:true(自带的这个要注掉)
-    ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
-        layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']//自定义分页布局
-        ,limits:[5,10]
-        ,first: false //不显示首页
-        ,last: false //不显示尾页
-      }
-    //,page: true //开启分页
+    layui.use(['table', 'form'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        table.render({
+            elem: '#menu'
+            , height: 400
+            , url: '/analysismanageController/getdata' //数据接口
+            , limit: 5//要传向后台的每页显示条数
+            //,page:true(自带的这个要注掉)
+            , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']//自定义分页布局
+                , limits: [5, 10]
+                , first: false //不显示首页
+                , last: false //不显示尾页
+            }
+            //,page: true //开启分页
 
-    ,cols: [  [ //表头
-      {field: 'analysisID', title: 'ID', width:80, sort: true, fixed: 'left'}
-      ,{field: 'percent', title: '首付比例/%', width:120}
-      ,{field: 'years', title: '贷款年限', width:120}
-      ,{field: 'rate', title: '年利率/%', width: 120}
-      ,{fixed: 'right', width:150, align:'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
-    ]]
-  });
+            , cols: [[ //表头
+                {field: 'analysisID', title: 'ID', width: 80, sort: true, fixed: 'left'}
+                , {field: 'percent', title: '首付比例/%', width: 120}
+                , {field: 'years', title: '贷款年限', width: 120}
+                , {field: 'rate', title: '年利率/%', width: 120}
+                , {fixed: 'right', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+            ]]
+        });
 
-  //监听工具条
-table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-  //console.log('hello');
-  var data = obj.data; //获得当前行数据
-  var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-  var tr = obj.tr; //获得当前行 tr 的DOM对象
-   if(layEvent === 'del'){ //删除ok
-    //console.log('del');
-    layer.confirm('确认删除', function(index){
-     $.ajax({
+        //监听工具条
+        table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                                                //console.log('hello');
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            if (layEvent === 'del') { //删除ok
+                //console.log('del');
+                layer.confirm('确认删除', function (index) {
+                    $.ajax({
                         url: "/analysismanageController/deleteanalysis",
                         type: "POST",
                         data: {analysisID: data.analysisID},
@@ -81,67 +81,72 @@ table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test�
                         }
                     });
                     return false;
-    });
-  } else if(layEvent === 'edit'){ //编辑//ok
-     console.log('edit');
-     layer.open({
+                });
+            } else if (layEvent === 'edit') { //编辑//ok
+                console.log('edit');
+                layer.open({
                     //layer提供了5种层类型。可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
-                        type: 1,
-                        title: "修改菜单信息",
-                        area: ['500px', '400px'],
-                        content: $("#popUpdateTest"),//引用的弹出层的页面层的方式加载修改界面表单'kslfms'
-                        success:function (layero, index) {
-                               $("#analysisID").attr("value",data.analysisID);
-                               $("#percent").attr("value",data.percent);
-                               $("#years").attr("value",data.years);
-                               $("#rate").attr("value",data.rate);
-                               var mask = $(".layui-layer-shade");
-                               mask.appendTo(layero.parent());
-                        },
-                    });
-                    //动态向表传递赋值可以参看文章进行修改界面的更新前数据的显示，当然也是异步请求的要数据的修改数据的获取
-                    setFormValue(obj,data);
-                 }
-           });
+                    type: 1,
+                    title: "修改菜单信息",
+                    area: ['500px', '400px'],
+                    content: $("#popUpdateTest"),//引用的弹出层的页面层的方式加载修改界面表单'kslfms'
+                    success: function (layero, index) {
+                        $("#analysisID").attr("value", data.analysisID);
+                        $("#percent").attr("value", data.percent);
+                        $("#years").attr("value", data.years);
+                        $("#rate").attr("value", data.rate);
+                        var mask = $(".layui-layer-shade");
+                        mask.appendTo(layero.parent());
+                    },
+                });
+                //动态向表传递赋值可以参看文章进行修改界面的更新前数据的显示，当然也是异步请求的要数据的修改数据的获取
+                setFormValue(obj, data);
+            }
+        });
 
 
-           //监听弹出框表单提交，massage是修改界面的表单数据'submit(demo11),是修改按钮的绑定//ok
-       function setFormValue(obj,data){
-           form.on('submit(demo11)', function(massage) {
-               //console.log('demoll');
-               $.ajax({
-                   url:'/analysismanageController/updateanalysis',
-                   type:'POST',
-                   data:{analysisID: data.analysisID,percent:massage.field.percent,years:massage.field.years,rate:massage.field.rate,},
-                   success:function (msg) {
-                       //var returnCode = msg.returnCode;//取得返回数据（Sting类型的字符串）的信息进行取值判断
-                       var json = JSON.parse(msg);
-                       var returnCode = json.returnCode;
-                       if(returnCode==200){
-                           layer.closeAll('loading');
-                           layer.load(2);
-                           layer.msg("修改成功", {icon: 6});
-                           setTimeout(function(){
-                              obj.update({
-                                    analysisID:massage.field.analysisID,
-                                    percent:massage.field.percent,
-                                    years:massage.field.years,
-                                    rate:massage.field.rate
+        //监听弹出框表单提交，massage是修改界面的表单数据'submit(demo11),是修改按钮的绑定//ok
+        function setFormValue(obj, data) {
+            form.on('submit(demo11)', function (massage) {
+                //console.log('demoll');
+                $.ajax({
+                    url: '/analysismanageController/updateanalysis',
+                    type: 'POST',
+                    data: {
+                        analysisID: data.analysisID,
+                        percent: massage.field.percent,
+                        years: massage.field.years,
+                        rate: massage.field.rate,
+                    },
+                    success: function (msg) {
+                        //var returnCode = msg.returnCode;//取得返回数据（Sting类型的字符串）的信息进行取值判断
+                        var json = JSON.parse(msg);
+                        var returnCode = json.returnCode;
+                        if (returnCode == 200) {
+                            layer.closeAll('loading');
+                            layer.load(2);
+                            layer.msg("修改成功", {icon: 6});
+                            setTimeout(function () {
+                                obj.update({
+                                    analysisID: massage.field.analysisID,
+                                    percent: massage.field.percent,
+                                    years: massage.field.years,
+                                    rate: massage.field.rate
                                 });//修改成功修改表格数据不进行跳转
                                 layer.closeAll();//关闭所有的弹出层
-                           }, 1000);
-                           //加载层-风格
-                       }else{
-                           layer.msg("修改失败", {icon: 5});
-                       }
-                   }
-               })
-           })
+                            }, 1000);
+                            //加载层-风格
+                        } else {
+                            layer.msg("修改失败", {icon: 5});
+                        }
+                    }
+                })
+            })
 
-       }
+        }
 
 
-           //添加菜单//ok
+        //添加菜单//ok
         $('#btn-add').on('click', function () {
             layer.open({
                 type: 1,
@@ -150,61 +155,61 @@ table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test�
                 area: ['500px', '300px'],
                 shadeClose: false, //点击遮罩不会关闭
                 content: $("#popinsertTest"),
-                success:function(layero){
-                var mask = $(".layui-layer-shade");
-                mask.appendTo(layero.parent());
-                //其中：layero是弹层的DOM对象
+                success: function (layero) {
+                    var mask = $(".layui-layer-shade");
+                    mask.appendTo(layero.parent());
+                    //其中：layero是弹层的DOM对象
                 }
             });
-             //动态向表传递赋值可以参看文章进行修改界面的更新前数据的显示，当然也是异步请求的要数据的修改数据的获取
-                    insertFormValue();
+            //动态向表传递赋值可以参看文章进行修改界面的更新前数据的显示，当然也是异步请求的要数据的修改数据的获取
+            insertFormValue();
         });
 
-        function insertFormValue(){
-           form.on('submit(insert)', function(massage) {
-               //console.log('insert');
-               //console.log(massage.field.newmenuName);
-               $.ajax({
-                   url:'/analysismanageController/addanalysis',
-                   type:'POST',
-                   data:{
-                   years:massage.field.newyears,
-                   percent:massage.field.newpercent,
-                   rate:massage.field.newrate,
-                   },
-                   success:function (msg) {
-                       //var returnCode = msg.returnCode;//取得返回数据（Sting类型的字符串）的信息进行取值判断
-                       var json = JSON.parse(msg);
-                       var returnCode = json.returnCode;
-                       if(returnCode != -1){
-                           layer.closeAll('loading');
-                           layer.load(2);
-                           layer.msg("添加成功", {icon: 6});
-                           setTimeout(function(){
-                              AddData = [];
-                              var data1={
-                              analysisID:returnCode,
-                              years:massage.field.years,
-                              rate:massage.field.rate,
-                              percent:massage.field.percent,
-                              };
-                              AddData.push(data1);
-                              table.reload('menu',{
-                              data : AddData
-                              });
+        function insertFormValue() {
+            form.on('submit(insert)', function (massage) {
+                //console.log('insert');
+                //console.log(massage.field.newmenuName);
+                $.ajax({
+                    url: '/analysismanageController/addanalysis',
+                    type: 'POST',
+                    data: {
+                        years: massage.field.newyears,
+                        percent: massage.field.newpercent,
+                        rate: massage.field.newrate,
+                    },
+                    success: function (msg) {
+                        //var returnCode = msg.returnCode;//取得返回数据（Sting类型的字符串）的信息进行取值判断
+                        var json = JSON.parse(msg);
+                        var returnCode = json.returnCode;
+                        if (returnCode != -1) {
+                            layer.closeAll('loading');
+                            layer.load(2);
+                            layer.msg("添加成功", {icon: 6});
+                            setTimeout(function () {
+                                AddData = [];
+                                var data1 = {
+                                    analysisID: returnCode,
+                                    years: massage.field.years,
+                                    rate: massage.field.rate,
+                                    percent: massage.field.percent,
+                                };
+                                AddData.push(data1);
+                                table.reload('menu', {
+                                    data: AddData
+                                });
                                 layer.closeAll();//关闭所有的弹出层
-                           }, 1000);
-                           //加载层-风格
-                       }else{
-                           layer.msg("添加失败", {icon: 5});
-                       }
-                   }
-               })
-           })
+                            }, 1000);
+                            //加载层-风格
+                        } else {
+                            layer.msg("添加失败", {icon: 5});
+                        }
+                    }
+                })
+            })
 
-       }
+        }
 
-})
+    })
 </script>
 <script type="text/html" id="barOption">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
@@ -214,29 +219,33 @@ table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test�
 <!--这里是修改弹出层的表单信息,表单的id用于表单的选择，style是在本页隐藏，只有点击编辑才会弹出-->
 <div class="layui-row" id="popUpdateTest" style="display:none;">
     <div class="layui-col-md10">
-        <form class="layui-form layui-from-pane" action="" style="margin-top:20px" >
+        <form class="layui-form layui-from-pane" action="" style="margin-top:20px">
             <div class="layui-form-item">
                 <label class="layui-form-label">ID</label>
                 <div class="layui-input-block">
-                    <input type="text" name="analysisID" id="analysisID"  required  lay-verify="required" autocomplete="off" value="" class="layui-input" disabled="true">
+                    <input type="text" name="analysisID" id="analysisID" required lay-verify="required"
+                           autocomplete="off" value="" class="layui-input" disabled="true">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">首付比例/%</label>
                 <div class="layui-input-block">
-                    <input type="text" name="percent" id="percent"  required  lay-verify="required|number" autocomplete="off" value="" class="layui-input">
+                    <input type="text" name="percent" id="percent" required lay-verify="required|number"
+                           autocomplete="off" value="" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">贷款年限</label>
                 <div class="layui-input-block">
-                    <input type="text" name="years" id="years"  required  lay-verify="required|number" autocomplete="off" value="" class="layui-input">
+                    <input type="text" name="years" id="years" required lay-verify="required|number" autocomplete="off"
+                           value="" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">年利率/%</label>
                 <div class="layui-input-block">
-                    <input type="text" name="rate" id="rate"  required  lay-verify="required|number" autocomplete="off" value="" class="layui-input">
+                    <input type="text" name="rate" id="rate" required lay-verify="required|number" autocomplete="off"
+                           value="" class="layui-input">
                 </div>
             </div>
 
@@ -252,23 +261,26 @@ table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test�
 <!--这里是修改弹出层的表单信息,表单的id用于表单的选择，style是在本页隐藏，只有点击编辑才会弹出-->
 <div class="layui-row" id="popinsertTest" style="display:none;">
     <div class="layui-col-md10">
-        <form class="layui-form layui-from-pane" action="" style="margin-top:20px" >
+        <form class="layui-form layui-from-pane" action="" style="margin-top:20px">
             <div class="layui-form-item">
                 <label class="layui-form-label">首付比例/%</label>
                 <div class="layui-input-block">
-                    <input type="text" name="newpercent" id="newpercent"  required  lay-verify="required|number" autocomplete="off" value="" class="layui-input">
+                    <input type="text" name="newpercent" id="newpercent" required lay-verify="required|number"
+                           autocomplete="off" value="" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">贷款年限</label>
                 <div class="layui-input-block">
-                    <input type="text" name="newyears" id="newyears"  required  lay-verify="required|number" autocomplete="off" value="" class="layui-input">
+                    <input type="text" name="newyears" id="newyears" required lay-verify="required|number"
+                           autocomplete="off" value="" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">年利率/%</label>
                 <div class="layui-input-block">
-                    <input type="text" name="newrate" id="newrate"  required  lay-verify="required|number" autocomplete="off" value="" class="layui-input">
+                    <input type="text" name="newrate" id="newrate" required lay-verify="required|number"
+                           autocomplete="off" value="" class="layui-input">
                 </div>
             </div>
 
