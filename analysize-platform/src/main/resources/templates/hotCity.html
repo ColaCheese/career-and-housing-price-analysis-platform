@@ -8,40 +8,38 @@
     <title>主页</title>
     <script th:src="@{js/jquery.min.js}"></script>
     <script th:src="@{framework/Echarts/code/modules/echarts-en.js}"></script>
+    <script th:src="@{js/theme.js}"></script>
     <link th:href="@{layui/css/layui.css}" rel="stylesheet"/>
     <script th:src="@{layui/layui.js}"></script>
     <style>
-        html,body{
-            height: 100%;
-        }
-        body {
-            overflow-y: scroll;
-            overflow-x: scroll;
-        }
         #box{
             height: 100%;
             width: 100%;
             display: flex;
-            justify-content:center;
-            flex-wrap:wrap;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
         }
         .chart{
             width:32%;
-            height:49%;
+            height:52%;
             padding:3px;
         }
     </style>
 </head>
 
-<body>
-<div id="box" >
-    <div id="rentPrice" class="chart"></div>
-    <div id="soldPrice" class="chart"></div>
-    <div id="salary" class="chart"></div>
-    <div id="rentNum" class="chart"></div>
-    <div id="soldNum" class="chart"></div>
-    <div id="jobNum" class="chart"></div>
+<body class="layui-layout-body">
+<div class="layui-body" style="left:25px;padding-top: 23px;overflow: hidden">
+    <div id="box" >
+        <div id="rentPrice" class="chart"></div>
+        <div id="soldPrice" class="chart"></div>
+        <div id="salary" class="chart"></div>
+        <div id="rentNum" class="chart"></div>
+        <div id="soldNum" class="chart"></div>
+        <div id="jobNum" class="chart"></div>
+    </div>
 </div>
+
 </body>
 <script>
 
@@ -69,11 +67,11 @@
                     }
                 }
                 let rentPriceChart = echarts.init(document.getElementById('rentPrice'));
-                let rentNumChart = echarts.init(document.getElementById('rentNum'));
+                let rentNumChart = echarts.init(document.getElementById('rentNum'),'walden');
                 let soldPriceChart = echarts.init(document.getElementById('soldPrice'));
-                let soldNumChart = echarts.init(document.getElementById('soldNum'));
+                let soldNumChart = echarts.init(document.getElementById('soldNum'),'walden');
                 let salaryChart = echarts.init(document.getElementById('salary'));
-                let jobNumChart = echarts.init(document.getElementById('jobNum'));
+                let jobNumChart = echarts.init(document.getElementById('jobNum'),'walden');
                 let dataShadow = [];
                 for (let i = 0; i < rentPrice.length; i++) {
                     dataShadow.push(500);
@@ -83,6 +81,7 @@
                     title: {
                         text:"热门城市房租排行",
                         subtext: 'Rent arrangement in popular cities'
+
                     },
 
                     xAxis: {
@@ -151,25 +150,13 @@
                         {
                             type: 'bar',
                             itemStyle: {
-                                color: new echarts.graphic.LinearGradient(
-                                    0, 0, 0, 1,
-                                    [
-                                        {offset: 0, color: '#83bff6'},
-                                        {offset: 0.5, color: '#188df0'},
-                                        {offset: 1, color: '#188df0'}
-                                    ]
-                                )
+                                color: "#6be6c1",
+                                opacity: 1
                             },
                             emphasis: {
                                 itemStyle: {
-                                    color: new echarts.graphic.LinearGradient(
-                                        0, 0, 0, 1,
-                                        [
-                                            {offset: 1, color: '#83bff6'},
-                                            {offset: 0.5, color: '#188df0'},
-                                            {offset: 0, color: '#188df0'}
-                                        ]
-                                    )
+                                    color: "#6be6c1",
+                                    opacity: 0.8
                                 }
                             },
                             data: rentPrice
@@ -187,17 +174,9 @@
                         trigger: 'item',
                         formatter: '{b} : {c} ({d}%)'
                     },
-                    visualMap: {
-                        show: false,
-                        min: 80,
-                        max: 600,
-                        inRange: {
-                            colorLightness: [0, 0.5]
-                        }
-                    },
                     grid:{
                         left: 50,
-                        top: 78,
+                        top: 80,
                         right: 40,
                         bottom: 40,
                     },
@@ -217,14 +196,6 @@
                             roseType: 'radius',
                             label: {
                                 color: '#000'
-                            },
-                            labelLine: {
-                                lineStyle: {
-                                    color: '#000'
-                                },
-                                smooth: 0.2,
-                                length: 10,
-                                length2: 20
                             },
                             animationType: 'scale',
                             animationEasing: 'elasticOut',
@@ -306,25 +277,13 @@
                         {
                             type: 'bar',
                             itemStyle: {
-                                color: new echarts.graphic.LinearGradient(
-                                    0, 0, 0, 1,
-                                    [
-                                        {offset: 0, color: '#bce672'},
-                                        {offset: 0.5, color: '#9ed048'},
-                                        {offset: 1, color: '#96ce54'}
-                                    ]
-                                )
+                                color: "#3fb1e3",
+                                opacity: 1
                             },
                             emphasis: {
                                 itemStyle: {
-                                    color: new echarts.graphic.LinearGradient(
-                                        0, 0, 0, 1,
-                                        [
-                                            {offset: 1, color: '#bce672'},
-                                            {offset: 0.5, color: '#9ed048'},
-                                            {offset: 0, color: '#96ce54'}
-                                        ]
-                                    )
+                                    color: "#3fb1e3",
+                                    opacity: 0.8
                                 }
                             },
                             data: soldPrice
@@ -341,17 +300,9 @@
                         trigger: 'item',
                         formatter: '{b} : {c} ({d}%)'
                     },
-                    visualMap: {
-                        show: false,
-                        min: 80,
-                        max: 600,
-                        inRange: {
-                            colorLightness: [0, 0.5]
-                        }
-                    },
                     grid:{
                         left: 50,
-                        top: 78,
+                        top: 80,
                         right: 40,
                         bottom: 40,
                     },
@@ -372,15 +323,6 @@
                             label: {
                                 color: '#000'
                             },
-                            labelLine: {
-                                lineStyle: {
-                                    color: '#000'
-                                },
-                                smooth: 0.2,
-                                length: 10,
-                                length2: 20
-                            },
-
                             animationType: 'scale',
                             animationEasing: 'elasticOut',
                         }
@@ -462,25 +404,13 @@
                         {
                             type: 'bar',
                             itemStyle: {
-                                color: new echarts.graphic.LinearGradient(
-                                    0, 0, 0, 1,
-                                    [
-                                        {offset: 0, color: '#F5A9A9'},
-                                        {offset: 0.5, color: '#FE2E2E'},
-                                        {offset: 1, color: '#DF0101'}
-                                    ]
-                                )
+                                color: "#a0a7e6",
+                                opacity: 1
                             },
                             emphasis: {
                                 itemStyle: {
-                                    color: new echarts.graphic.LinearGradient(
-                                        0, 0, 0, 1,
-                                        [
-                                            {offset: 1, color: '#F5A9A9'},
-                                            {offset: 0.5, color: '#FE2E2E'},
-                                            {offset: 0, color: '#DF0101'}
-                                        ]
-                                    )
+                                    color: "#a0a7e6",
+                                    opacity: 0.8
                                 }
                             },
                             data: salary
@@ -497,17 +427,9 @@
                         trigger: 'item',
                         formatter: '{b} : {c} ({d}%)'
                     },
-                    visualMap: {
-                        show: false,
-                        min: 80,
-                        max: 600,
-                        inRange: {
-                            colorLightness: [0, 0.5]
-                        }
-                    },
                     grid:{
                         left: 50,
-                        top: 78,
+                        top: 80,
                         right: 40,
                         bottom: 40,
                     },
@@ -528,15 +450,6 @@
                             label: {
                                 color: '#000'
                             },
-                            labelLine: {
-                                lineStyle: {
-                                    color: '#000'
-                                },
-                                smooth: 0.2,
-                                length: 10,
-                                length2: 20
-                            },
-
                             animationType: 'scale',
                             animationEasing: 'elasticOut',
                         }
@@ -549,6 +462,7 @@
                 soldNumChart.setOption(option4);
                 salaryChart.setOption(option5);
                 jobNumChart.setOption(option6);
+
                 rentPriceChart.on('click', function () {
                     layui.use("layer", function() {
                         window.top.layer.open({
@@ -557,8 +471,8 @@
                             shade: [0.3, '#000', true],
                             closeBtn: 0,//删除关闭按钮
                             title: false,//删除标题
-                            area: ['1200px', '800px'],
-                            content: '<div id="fullChart" style="height:100%;width:100%;"></div>',
+                            area: ['700px', '500px'],
+                            content: '<div style="height:100%;width:100%;overflow: hidden"><div id="fullChart" style="width:80%;height:80%;margin-top:9%;margin-left:12%;"></div></div>',
                             success: function () {
                                 let full = echarts.init(window.top.document.getElementById('fullChart'));
                                 full.setOption(option1);
@@ -575,10 +489,10 @@
                             shade: [0.3, '#000', true],
                             closeBtn: 0,//删除关闭按钮
                             title: false,//删除标题
-                            area: ['1200px', '800px'],
-                            content: '<div id="fullChart" style="height:100%;width:100%;"></div>',
+                            area: ['700px', '400px'],
+                            content: '<div style="height:100%;width:100%;overflow: hidden"><div id="fullChart" style="width:80%;height:80%;margin-top:10%;margin-left:16%;"></div></div>',
                             success: function () {
-                                let full = echarts.init(window.top.document.getElementById('fullChart'));
+                                let full = echarts.init(window.top.document.getElementById('fullChart'),'walden');
                                 full.setOption(option2);
                             }
                         });
@@ -593,8 +507,8 @@
                             shade: [0.3, '#000', true],
                             closeBtn: 0,//删除关闭按钮
                             title: false,//删除标题
-                            area: ['1200px', '800px'],
-                            content: '<div id="fullChart" style="height:100%;width:100%;"></div>',
+                            area: ['700px', '500px'],
+                            content: '<div style="height:100%;width:100%;overflow: hidden"><div id="fullChart" style="width:80%;height:80%;margin-top:9%;margin-left:12%;"></div></div>',
                             success: function () {
                                 let full = echarts.init(window.top.document.getElementById('fullChart'));
                                 full.setOption(option3);
@@ -611,10 +525,10 @@
                             shade: [0.3, '#000', true],
                             closeBtn: 0,//删除关闭按钮
                             title: false,//删除标题
-                            area: ['1200px', '800px'],
-                            content: '<div id="fullChart" style="height:100%;width:100%;"></div>',
+                            area: ['700px', '400px'],
+                            content: '<div style="height:100%;width:100%;overflow: hidden"><div id="fullChart" style="width:80%;height:80%;margin-top:10%;margin-left:16%;"></div></div>',
                             success: function () {
-                                let full = echarts.init(window.top.document.getElementById('fullChart'));
+                                let full = echarts.init(window.top.document.getElementById('fullChart'),'walden');
                                 full.setOption(option4);
                             }
                         });
@@ -629,8 +543,8 @@
                             shade: [0.3, '#000', true],
                             closeBtn: 0,//删除关闭按钮
                             title: false,//删除标题
-                            area: ['1200px', '800px'],
-                            content: '<div id="fullChart" style="height:100%;width:100%;"></div>',
+                            area: ['700px', '500px'],
+                            content: '<div style="height:100%;width:100%;overflow: hidden"><div id="fullChart" style="width:80%;height:80%;margin-top:9%;margin-left:12%;"></div></div>',
                             success: function () {
                                 let full = echarts.init(window.top.document.getElementById('fullChart'));
                                 full.setOption(option5);
@@ -647,10 +561,10 @@
                             shade: [0.3, '#000', true],
                             closeBtn: 0,//删除关闭按钮
                             title: false,//删除标题
-                            area: ['1200px', '800px'],
-                            content: '<div id="fullChart" style="height:100%;width:100%;"></div>',
+                            area: ['700px', '400px'],
+                            content: '<div style="height:100%;width:100%;overflow: hidden"><div id="fullChart" style="width:80%;height:80%;margin-top:10%;margin-left:16%;"></div></div>',
                             success: function () {
-                                let full = echarts.init(window.top.document.getElementById('fullChart'));
+                                let full = echarts.init(window.top.document.getElementById('fullChart'),'walden');
                                 full.setOption(option6);
                             }
                         });
