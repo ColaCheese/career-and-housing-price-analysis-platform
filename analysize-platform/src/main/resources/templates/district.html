@@ -5,35 +5,39 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <title>主页</title>
+    <link th:href="@{layui/css/layui.css}" rel="stylesheet"/>
     <base href="/">
     <script th:src="@{js/jquery.min.js}"></script>
     <script th:src="@{framework/Echarts/code/modules/echarts-en.js}"></script>
     <script th:src="@{layui/layui.js}"></script>
+    <script th:src="@{js/theme.js}"></script>
     <style>
         #box {
             height: 100%;
             width: 100%;
             display: flex;
             justify-content: center;
+            align-items: center;
             flex-wrap: wrap;
         }
         .chart {
-            width: 49%;
-            height: 49%;
-            padding: 3px;
+            width: 45%;
+            height: 48%;
+            margin: 0 30px;
         }
     </style>
 
 </head>
 
 <body class="layui-layout-body">
-<div class="layui-body" style="left:25px;padding-top: 23px;overflow: hidden">
+<div class="layui-body" style="left:110px;padding-top: 23px;overflow: hidden">
     <div id="box">
         <div id="rentPrice" class="chart"></div>
         <div id="rentNum" class="chart" ></div>
         <div id="soldPrice" class="chart"></div>
         <div id="soldNum" class="chart"></div>
     </div>
+</div>
 </body>
 
 <script>
@@ -58,7 +62,7 @@
                     dataShadow.push(500);
                 }
                 let rentPriceChart = echarts.init(document.getElementById('rentPrice'));
-                let rentNumChart = echarts.init(document.getElementById('rentNum'));
+                let rentNumChart = echarts.init(document.getElementById('rentNum'),'walden');
                 <!--房租排行-->
                 let option1 = {
                     title: {
@@ -135,25 +139,13 @@
                         {
                             type: 'bar',
                             itemStyle: {
-                                color: new echarts.graphic.LinearGradient(
-                                    0, 0, 0, 1,
-                                    [
-                                        {offset: 0, color: '#83bff6'},
-                                        {offset: 0.5, color: '#188df0'},
-                                        {offset: 1, color: '#188df0'}
-                                    ]
-                                )
+                                color: "#6be6c1",
+                                opacity: 1
                             },
                             emphasis: {
                                 itemStyle: {
-                                    color: new echarts.graphic.LinearGradient(
-                                        0, 0, 0, 1,
-                                        [
-                                            {offset: 1, color: '#83bff6'},
-                                            {offset: 0.5, color: '#188df0'},
-                                            {offset: 0, color: '#188df0'}
-                                        ]
-                                    )
+                                    color: "#6be6c1",
+                                    opacity: 0.8
                                 }
                             },
                             data: rentPrice
@@ -171,14 +163,6 @@
                         trigger: 'item',
                         formatter: '{b} : {c} ({d}%)'
                     },
-                    visualMap: {
-                        show: false,
-                        min: 80,
-                        max: 600,
-                        inRange: {
-                            colorLightness: [0, 0.5]
-                        }
-                    },
                     grid: {
                         left: 50,
                         top: 78,
@@ -190,7 +174,7 @@
                             name: '份额',
                             type: 'pie',
                             radius: '55%',
-                            center: ['50%', '50%'],
+                            center: ['50%', '55%'],
                             data: [
                                 {value: rentNum[0], name: district1[0]},
                                 {value: rentNum[1], name: district1[1]},
@@ -205,14 +189,6 @@
                             roseType: 'radius',
                             label: {
                                 color: '#000'
-                            },
-                            labelLine: {
-                                lineStyle: {
-                                    color: '#000'
-                                },
-                                smooth: 0.2,
-                                length: 10,
-                                length2: 20
                             },
                             animationType: 'scale',
                             animationEasing: 'elasticOut',
@@ -230,8 +206,8 @@
                             shade: [0.3, '#000',true],
                             closeBtn:0,//删除关闭按钮
                             title: false,//删除标题
-                            area: ['1200px', '800px'],
-                            content:'<div id="fullChart" style="height:100%;width:100%;"></div>',
+                            area: ['700px', '500px'],
+                            content: '<div style="height:100%;width:100%;overflow: hidden"><div id="fullChart" style="width:80%;height:80%;margin-top:9%;margin-left:12%;"></div></div>',
                             success:function(){
                                 let full = echarts.init(window.top.document.getElementById('fullChart'));
                                 full.setOption(option1);
@@ -247,10 +223,10 @@
                             shade: [0.3, '#000',true],
                             closeBtn:0,//删除关闭按钮
                             title: false,//删除标题
-                            area: ['1200px', '800px'],
-                            content:'<div id="fullChart" style="height:100%;width:100%;"></div>',
+                            area: ['700px', '500px'],
+                            content: '<div style="height:100%;width:100%;overflow: hidden"><div id="fullChart" style="width:80%;height:80%;margin-top:9%;margin-left:12%;"></div></div>',
                             success:function(){
-                                let full = echarts.init(window.top.document.getElementById('fullChart'));
+                                let full = echarts.init(window.top.document.getElementById('fullChart'),'walden');
                                 full.setOption(option2);
                             }
                         });
@@ -274,7 +250,7 @@
                     dataShadow.push(500);
                 }
                 let soldPriceChart = echarts.init(document.getElementById('soldPrice'));
-                let soldNumChart = echarts.init(document.getElementById('soldNum'));
+                let soldNumChart = echarts.init(document.getElementById('soldNum'),'walden');
                 <!--房价排行-->
                 let option3 = {
                     title: {
@@ -348,25 +324,13 @@
                         {
                             type: 'bar',
                             itemStyle: {
-                                color: new echarts.graphic.LinearGradient(
-                                    0, 0, 0, 1,
-                                    [
-                                        {offset: 0, color: '#bce672'},
-                                        {offset: 0.5, color: '#9ed048'},
-                                        {offset: 1, color: '#96ce54'}
-                                    ]
-                                )
+                                color: "#3fb1e3",
+                                opacity: 1
                             },
                             emphasis: {
                                 itemStyle: {
-                                    color: new echarts.graphic.LinearGradient(
-                                        0, 0, 0, 1,
-                                        [
-                                            {offset: 1, color: '#bce672'},
-                                            {offset: 0.5, color: '#9ed048'},
-                                            {offset: 0, color: '#96ce54'}
-                                        ]
-                                    )
+                                    color: "#3fb1e3",
+                                    opacity: 0.8
                                 }
                             },
                             data: soldPrice
@@ -385,14 +349,6 @@
                         trigger: 'item',
                         formatter: '{b} : {c} ({d}%)'
                     },
-                    visualMap: {
-                        show: false,
-                        min: 80,
-                        max: 600,
-                        inRange: {
-                            colorLightness: [0, 0.5]
-                        }
-                    },
                     grid: {
                         left: 50,
                         top: 78,
@@ -404,7 +360,7 @@
                             name: '份额',
                             type: 'pie',
                             radius: '55%',
-                            center: ['50%', '50%'],
+                            center: ['50%', '55%'],
                             data: [
                                 {value: soldNum[0], name: district2[0]},
                                 {value: soldNum[1], name: district2[1]},
@@ -419,14 +375,6 @@
                             roseType: 'radius',
                             label: {
                                 color: '#000'
-                            },
-                            labelLine: {
-                                lineStyle: {
-                                    color: '#000'
-                                },
-                                smooth: 0.2,
-                                length: 10,
-                                length2: 20
                             },
 
                             animationType: 'scale',
@@ -446,8 +394,8 @@
                             shade: [0.3, '#000', true],
                             closeBtn: 0,//删除关闭按钮
                             title: false,//删除标题
-                            area: ['1200px', '800px'],
-                            content: '<div id="fullChart" style="height:100%;width:100%;"></div>',
+                            area: ['700px', '500px'],
+                            content: '<div style="height:100%;width:100%;overflow: hidden"><div id="fullChart" style="width:80%;height:80%;margin-top:9%;margin-left:12%;"></div></div>',
                             success: function () {
                                 let full = echarts.init(window.top.document.getElementById('fullChart'));
                                 full.setOption(option3);
@@ -464,10 +412,10 @@
                             shade: [0.3, '#000', true],
                             closeBtn: 0,//删除关闭按钮
                             title: false,//删除标题
-                            area: ['1200px', '800px'],
-                            content: '<div id="fullChart" style="height:100%;width:100%;"></div>',
+                            area: ['700px', '500px'],
+                            content: '<div style="height:100%;width:100%;overflow: hidden"><div id="fullChart" style="width:80%;height:80%;margin-top:9%;margin-left:12%;"></div></div>',
                             success: function () {
-                                let full = echarts.init(window.top.document.getElementById('fullChart'));
+                                let full = echarts.init(window.top.document.getElementById('fullChart'),'walden');
                                 full.setOption(option4);
                             }
                         });
