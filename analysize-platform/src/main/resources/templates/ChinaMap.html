@@ -305,15 +305,13 @@
                                     var layer = layui.layer;
                                     layer.open({
                                         type: 2,
-                                        title: data.substr(0, data.length - 1) + '房价与职业分析表',
-                                        content: ["/cityName","no"],
+                                        title: [data.substr(0, data.length - 1) + '房价与职业分析表','font-weight:bold;'],
+                                        content: ["/cityName"],
+                                        offset: 'auto',
                                         shadeClose: true,
-
                                         shade: false,
-
-                                        area: ['900px', '600px'],
+                                        area: ['700px', '500px'],
                                         success: function (layero, index) {
-                                            $("iframe.layadmin-iframe").attr("allowfullscreen","true");
                                             // 获取子页面的iframe
                                             var iframe = window['layui-layer-iframe' + index];
                                             // 向子页面的全局函数child传参

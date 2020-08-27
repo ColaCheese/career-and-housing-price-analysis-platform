@@ -10,38 +10,41 @@
     <title>主页</title>
     <script th:src="@{js/jquery.min.js}"></script>
     <script th:src="@{framework/Echarts/code/modules/echarts-en.js}"></script>
+    <script th:src="@{js/theme.js}"></script>
     <link th:href="@{layui/css/layui.css}" rel="stylesheet"/>
     <script th:src="@{layui/layui.js}"></script>
     <style>
-        html,body{
-            height: 100%;
-        }
         #box{
             height: 100%;
             width: 100%;
             display: flex;
-            justify-content:center;
-            flex-wrap:wrap;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
         }
         .chart{
-            width:32%;
-            height:50%;
-            padding:3px;
+            width:48%;
+            height:70%;
+            margin: 25px 5px 5px;
         }
     </style>
 
 </head>
 
-<body>
-<div id="box" style="height:600px;width: 900px;background-color:grey;position: absolute">
-    <div id="container_first" class="chart" style="background-color:white"></div>
-    <div id="container_second" class="chart" style="background-color:white"></div>
-    <div id="container_third" class="chart" style="background-color:white"></div>
-    <div id="container_forth" class="chart" style="background-color:white"></div>
-    <div id="container_fifth" class="chart" style="background-color:white"></div>
-    <div id="container_sixth" class="chart" style="background-color:white"></div>
+<body class="layui-layout-body">
+<div class="layui-body" style="left: 0;height: 457px;">
+    <div id="box">
+        <div id="container_first" class="chart"></div>
+        <div id="container_second" class="chart"></div>
+        <div id="container_third" class="chart"></div>
+        <div id="container_forth" class="chart"></div>
+        <div id="container_fifth" class="chart"></div>
+        <div id="container_sixth" class="chart"></div>
+    </div>
 </div>
+
 </body>
+
 
 <script>
     function child(d) {
@@ -70,9 +73,11 @@
                     var option1 = {
                         title: {
                             text: "租房价格排行",
-                            subtext: 'Rent price ranking in districts of city'
+                            subtext: 'Rent price ranking in districts of city',
+                            textStyle: {
+                                fontSize: 16
+                            }
                         },
-
                         xAxis: {
                             data: districts,
                             textStyle: {
@@ -114,7 +119,7 @@
                             left: 50,
                             top: 78,
                             right: 40,
-                            bottom: 40,
+                            bottom: 60,
                         },
                         series: [
                             {
@@ -130,25 +135,13 @@
                             {
                                 type: 'bar',
                                 itemStyle: {
-                                    color: new echarts.graphic.LinearGradient(
-                                        0, 0, 0, 1,
-                                        [
-                                            {offset: 0, color: '#83bff6'},
-                                            {offset: 0.5, color: '#188df0'},
-                                            {offset: 1, color: '#188df0'}
-                                        ]
-                                    )
+                                    color: "#3fb1e3",
+                                    opacity: 1
                                 },
                                 emphasis: {
                                     itemStyle: {
-                                        color: new echarts.graphic.LinearGradient(
-                                            0, 0, 0, 1,
-                                            [
-                                                {offset: 1, color: '#F5A9A9'},
-                                                {offset: 0.5, color: '#FE2E2E'},
-                                                {offset: 0, color: '#DF0101'}
-                                            ]
-                                        )
+                                        color: "#3fb1e3",
+                                        opacity: 0.8
                                     }
                                 },
                                 data: rentPrice
@@ -193,23 +186,18 @@
                             data.push(newData);
                         }
                     }
-                    var soldNumChart = echarts.init(document.getElementById('container_second'));
+                    var soldNumChart = echarts.init(document.getElementById('container_second'),'walden');
                     <!--租房数量占比-->
                     var option2 = {
                         title: {
                             text: '城区售房数比例',
                             subtext: 'Share of sold housing in districts of city',
+                            textStyle: {
+                                fontSize: 16
+                            }
                         },
                         tooltip: {
                             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                        },
-                        visualMap: {
-                            show: false,
-                            min: 80,
-                            max: 600,
-                            inRange: {
-                                colorLightness: [0, 0.5]
-                            }
                         },
                         grid: {
                             left: 50,
@@ -222,21 +210,13 @@
                                 name: '售房数比例',
                                 type: 'pie',
                                 radius: '55%',
-                                center: ['50%', '50%'],
+                                center: ['50%', '60%'],
                                 data: data.sort(function (a, b) {
                                     return a.value - b.value;
                                 }),
                                 roseType: 'radius',
                                 label: {
                                     color: '#000'
-                                },
-                                labelLine: {
-                                    lineStyle: {
-                                        color: '#000'
-                                    },
-                                    smooth: 0.2,
-                                    length: 10,
-                                    length2: 20
                                 },
                                 animationType: 'scale',
                                 animationEasing: 'elasticOut',
@@ -338,7 +318,10 @@
                         var option3 = {
                             title: {
                                 text: "城区信息表",
-                                subtext: 'Information of city'
+                                subtext: 'Information of city',
+                                textStyle: {
+                                    fontSize: 16
+                                }
                             },
 
                             xAxis: {
@@ -380,33 +363,21 @@
                             ],
                             grid: {
                                 left: 50,
-                                top: 78,
+                                top: 70,
                                 right: 40,
-                                bottom: 40,
+                                bottom: 80,
                             },
                             series: [
                                 {
                                     type: 'bar',
                                     itemStyle: {
-                                        color: new echarts.graphic.LinearGradient(
-                                            0, 0, 0, 1,
-                                            [
-                                                {offset: 0, color: '#bce672'},
-                                                {offset: 0.5, color: '#9ed048'},
-                                                {offset: 1, color: '#96ce54'}
-                                            ]
-                                        )
+                                        color: "#6be6c1",
+                                        opacity: 1
                                     },
                                     emphasis: {
                                         itemStyle: {
-                                            color: new echarts.graphic.LinearGradient(
-                                                0, 0, 0, 1,
-                                                [
-                                                    {offset: 1, color: '#83bff6'},
-                                                    {offset: 0.5, color: '#188df0'},
-                                                    {offset: 0, color: '#188df0'}
-                                                ]
-                                            )
+                                            color: "#6be6c1",
+                                            opacity: 0.8
                                         }
                                     },
                                     data: value
@@ -454,7 +425,10 @@
                     var option4 = {
                         title: {
                             text: "售房价格排行",
-                            subtext: 'Sold price ranking in districts of city'
+                            subtext: 'Sold price ranking in districts of city',
+                            textStyle: {
+                                fontSize: 16
+                            }
                         },
 
                         xAxis: {
@@ -496,9 +470,9 @@
                         ],
                         grid:{
                             left: 50,
-                            top: 78,
+                            top: 70,
                             right: 40,
-                            bottom: 40,
+                            bottom: 80,
                         },
                         series: [
                             {
@@ -514,25 +488,13 @@
                             {
                                 type: 'bar',
                                 itemStyle: {
-                                    color: new echarts.graphic.LinearGradient(
-                                        0, 0, 0, 1,
-                                        [
-                                            {offset: 0, color: '#bce672'},
-                                            {offset: 0.5, color: '#9ed048'},
-                                            {offset: 1, color: '#96ce54'}
-                                        ]
-                                    )
+                                    color: "#a0a7e6",
+                                    opacity: 1
                                 },
                                 emphasis: {
                                     itemStyle: {
-                                        color: new echarts.graphic.LinearGradient(
-                                            0, 0, 0, 1,
-                                            [
-                                                {offset: 1, color: '#83bff6'},
-                                                {offset: 0.5, color: '#188df0'},
-                                                {offset: 0, color: '#188df0'}
-                                            ]
-                                        )
+                                        color: "#a0a7e6",
+                                        opacity: 0.8
                                     }
                                 },
                                 data: areaSoldprice
@@ -575,7 +537,10 @@
                     var option5 = {
                         title: {
                             text: "职业工资排行",
-                            subtext: 'Salary ranking of occupation'
+                            subtext: 'Salary ranking of occupation',
+                            textStyle: {
+                                fontSize: 16
+                            }
                         },
 
                         xAxis: {
@@ -619,31 +584,19 @@
                             left: 50,
                             top: 78,
                             right: 40,
-                            bottom: 40,
+                            bottom: 60,
                         },
                         series: [
                             {
                                 type: 'bar',
                                 itemStyle: {
-                                    color: new echarts.graphic.LinearGradient(
-                                        0, 0, 0, 1,
-                                        [
-                                            {offset: 1, color: '#F5A9A9'},
-                                            {offset: 0.5, color: '#FE2E2E'},
-                                            {offset: 0, color: '#DF0101'}
-                                        ]
-                                    )
+                                    color: "#c4ebad",
+                                    opacity: 1
                                 },
                                 emphasis: {
                                     itemStyle: {
-                                        color: new echarts.graphic.LinearGradient(
-                                            0, 0, 0, 1,
-                                            [
-                                                {offset: 0, color: '#bce672'},
-                                                {offset: 0.5, color: '#9ed048'},
-                                                {offset: 1, color: '#96ce54'}
-                                            ]
-                                        )
+                                        color: "#c4ebad",
+                                        opacity: 0.8
                                     }
                                 },
                                 data: salary
@@ -682,23 +635,18 @@
                             data.push(newData)
                         }
                     }
-                    var occupationChart = echarts.init(document.getElementById('container_sixth'));
+                    var occupationChart = echarts.init(document.getElementById('container_sixth'),'walden');
                     <!--职业占比-->
                     var option6 = {
                         title: {
                             text: '职位份额',
                             subtext: 'Share of occupation in the city',
+                            textStyle: {
+                                fontSize: 16
+                            }
                         },
                         tooltip: {
                             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                        },
-                        visualMap: {
-                            show: false,
-                            min: 80,
-                            max: 600,
-                            inRange: {
-                                colorLightness: [0, 0.5]
-                            }
                         },
                         grid: {
                             left: 50,
@@ -706,27 +654,18 @@
                             right: 40,
                             bottom: 40,
                         },
-                        color : [ '#00FFFF', '#00FF00', '#667EEA', '#FF8C00' ],
                         series: [
                             {
                                 name: '职位份额',
                                 type: 'pie',
                                 radius: '55%',
-                                center: ['50%', '50%'],
+                                center: ['50%', '55%'],
                                 data: data.sort(function (a, b) {
                                     return a.value - b.value;
                                 }),
                                 roseType: 'radius',
                                 label: {
                                     color: '#255'
-                                },
-                                labelLine: {
-                                    lineStyle: {
-                                        color: '#255'
-                                    },
-                                    smooth: 0.2,
-                                    length: 10,
-                                    length2: 20
                                 },
                                 animationType: 'scale',
                                 animationEasing: 'elasticOut',
