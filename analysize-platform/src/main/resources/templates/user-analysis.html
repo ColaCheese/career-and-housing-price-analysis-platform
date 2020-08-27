@@ -4,52 +4,55 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>layout 后台大布局 - Layui</title>
     <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+    <script th:src="@{js/theme.js}"></script>
 </head>
 
 <body class="layui-layout-body">
 
-<div class="layui-layout layui-layout-admin">
-    <div class="layui-body" style="left: 40px;">
-            <div class="layui-card-body layui-form" style="height:120px">
-                <br />
-                <div class="layui-col-log-offset1 layui-input-inline">
-                    <div class="form-inline layui-form" style="float:left;padding-right: 20px;">
-                        <label style="color:#2061fc">城市：</label>
-                         <select  name="cityName" lay-filter="city" id="city" lay-search="" lay-varify="select" style="color:#2061fc">
-                            <option value="" placeholder="请选择"></option>
-                            <option  th:each="c:${citys}"  th:value="${c}" th:text="${c}" value="0">北京市</option>
-                        </select>
-                    </div>
-
-                    <div class="form-inline" style="float:left;padding-right: 20px;">
-                        <label style="color:#2061fc">职业方向：</label>
-                        <select name="trendName" lay-filter="trend" id="trend" lay-varify="select" style="color:#2061fc">
-                            <option value="" placeholder="请选择"></option>
-                            <option th:each="t:${trends}"  th:value="${t}" th:text="${t}" value="0">不定</option>
-                        </select>
-                    </div>
-
-                    <div class="form-inline" style="float:left;padding-right: 20px;width: 400px;">
-                        <label style="color:#2061fc">贷款倾向：</label>
-                        <select name="analysisID" lay-filter="borrow" id="borrow" lay-varify="select" style="color:#2061fc">
-                            <option value="" placeholder="请选择"></option>
-                            <option th:each="a:${anas}"  th:value="${a.analysisID}" th:text="'首付'+ ${a.percent} + '%，还款' + ${a.years} + '年，利率' + ${a.rate} + '，房子面积为90平方米'" value="0">不贷款</option>
-
-                        </select>
-                    </div>
-
-                    <div style="float:left;padding-right: 20px">
-                        <br>
-                        <button class="layui-btn" lay-submit lay-filter="formDemo">查看分析</button>
-                    </div>
-
-                </div>
-                <br>
-                <div id="container" style="width:450px;height:420px;position: relative;float: left ;margin: 2px"></div>
-                <br>
-                <div id="container1" style="width:420px;height:420px;position: relative;float: left ;margin: 60px">
-                </div>
+<div class="layui-body" style="left: 150px;overflow: hidden">
+    <div class="layui-card-body layui-form" style="height:100px;padding-top: 40px;">
+        <br />
+        <div class="layui-col-log-offset1 layui-input-inline">
+            <div class="form-inline layui-form" style="float:left;padding-right: 20px;">
+                <label style="color:grey;font-weight: bold;font-size: 18px">&nbsp城市：</label>
+                <div style="height: 10px"></div>
+                <select  name="cityName" lay-filter="city" id="city" lay-search="" lay-varify="select" style="color:#2061fc;">
+                    <option value="" placeholder="请选择"></option>
+                    <option  th:each="c:${citys}"  th:value="${c}" th:text="${c}" value="0">北京市</option>
+                </select>
             </div>
+
+            <div class="form-inline" style="float:left;padding-right: 20px;">
+                <label style="color:grey;font-weight: bold;font-size: 18px">&nbsp职业方向：</label>
+                <div style="height: 10px"></div>
+                <select name="trendName" lay-filter="trend" id="trend" lay-varify="select" style="color:#2061fc">
+                    <option value="" placeholder="请选择"></option>
+                    <option th:each="t:${trends}"  th:value="${t}" th:text="${t}" value="0">不定</option>
+                </select>
+            </div>
+
+            <div class="form-inline" style="float:left;padding-right: 20px;width: 400px;">
+                <label style="color:grey;font-weight: bold;font-size: 18px">&nbsp贷款倾向：</label>
+                <div style="height: 10px"></div>
+                <select name="analysisID" lay-filter="borrow" id="borrow" lay-varify="select" style="color:#2061fc">
+                    <option value="" placeholder="请选择"></option>
+                    <option th:each="a:${anas}"  th:value="${a.analysisID}" th:text="'首付'+ ${a.percent} + '%，还款' + ${a.years} + '年，利率' + ${a.rate} + '，房子面积为90平方米'" value="0">不贷款</option>
+
+                </select>
+            </div>
+
+            <div style="float:left;padding-right: 20px">
+                <br>
+                <div style="height: 11px"></div>
+                <button class="layui-btn" lay-submit lay-filter="formDemo">查看分析</button>
+            </div>
+
+        </div>
+        <br>
+        <div id="container" style="width:450px;height:420px;position: relative;float: left ;margin-top: 25px"></div>
+        <br>
+        <div id="container1" style="width:400px;height:420px;position: relative;float: left ;margin: 50px 0 20px 80px;padding-right: 10px;">
+        </div>
     </div>
 </div>
 <script th:src="@{/layui/layui.js}"></script>
@@ -68,8 +71,6 @@
         MaxRentNum = 90000;
     //传值部分
 
-
-
     function leidatu(res) {
 
        var Soldprice= res.citySoldprice,
@@ -87,10 +88,14 @@
            d5 = Money/MaxMoney,
            d6 = Jobnum/MaxJobnum;*/
 
-        var analysisChart = echarts.init(document.getElementById('container'));
+        var analysisChart = echarts.init(document.getElementById('container'),'walden');
         var option = {
             title: {
-                text: '数据分析'
+                text: '分析结果展示：',
+                textStyle: {
+                    color: "#a0a7e6",
+                    fontStyle: 'italic'
+                }
             },
             tooltip: {
                 trigger: 'item'
@@ -100,11 +105,12 @@
                 name: {
                     textStyle: {
                         color: '#fff',
-                        backgroundColor: '#999',
-                        borderRadius: 3,
-                        padding: [3, 5]
+                        backgroundColor: "#a0a7e6",
+                        borderRadius: 5,
+                        padding: [5, 5]
                     }
                 },
+                shape: 'circle',
                 indicator: [
                     { name: '房价', max: MaxSoldprice},
                     { name: '房数', max: MaxSoldnum},
@@ -117,7 +123,12 @@
             series: [{
                 name: '数据分析',
                 type: 'radar',
-                areaStyle: {},
+                itemStyle: {
+                    color: "#a0a7e6"
+                },
+                areaStyle: {
+                    opacity: 0.4
+                },
                 data: [
                     {
                         value: [Soldprice, Soldnum, RentPrice, RentNum, Money, Jobnum],
@@ -159,18 +170,18 @@ layui.use('form', function () {
           console.log(res);
           leidatu(res);
           var txt = "";
-          txt = "<h2><center>" + res.cityName + "市数据分析</center></h2>"+
-                "<p>" + res.cityName + "市，8月份" + res.trend.trendName + "职业发布的工作岗位共计" + res.trend.trendNum + "个，平均薪资为" + res.trend.trendPrice + "元/月。</p>"+
-                "<h2><center>选择购房</center></h2>";
+          txt = "<h2 style='font-style: italic;margin-bottom: 10px;font-weight: bold;color: #a0a7e6'><center>" + res.cityName + "市数据分析</center></h2>"+
+                "<p style='text-align: center'>" + res.cityName + "市，8月份" + res.trend.trendName + "职业发布的工作岗位共计" + res.trend.trendNum + "个，平均薪资为" + res.trend.trendPrice + "元/月。</p>"+
+                "<h2 style='font-style: italic;margin-bottom: 10px;margin-top: 15px;font-weight: bold;color: #a0a7e6'><center>选择购房</center></h2>";
           if(res.data.percent == "100"){
-                txt = txt +   "<p>按平均房价" + res.citySoldprice + "，购买90平米的自住房需" + res.citySoldprice*90 + "元</p>。";
+                txt = txt +   "<p style='text-align: center'>按平均房价" + res.citySoldprice + "，购买90平米的自住房需" + res.citySoldprice*90 + "元。</p>";
                 }
           else{
                 txt = txt +
-                "<p>按平均房价" + res.citySoldprice + "元/平米，利率" + res.data.rate + "，还贷" + res.data.years + "年，首付" + res.data.percent/10 + "成来计算，购买90平米的自住房的月供为" + res.mothPay + "元/月。预计占工资收入的" + res.soldPercent + "%。</p>";
+                "<p style='text-align: center'>按平均房价" + res.citySoldprice + "元/平米，利率" + res.data.rate + "，还贷" + res.data.years + "年，首付" + res.data.percent/10 + "成来计算，购买90平米的自住房的月供为" + res.mothPay + "元/月。预计占工资收入的" + res.soldPercent + "%。</p>";
                }
-          txt = txt + "<h2><center>选择租房</center></h2>"+
-                "<p>租房平均价格为" + res.cityRentprice + "元/月。预计占工资收入的" + res.rentPercent + "%。</p>";
+          txt = txt + "<h2 style='font-style: italic;margin-bottom: 10px;margin-top: 15px;font-weight: bold;color: #a0a7e6'><center>选择租房</center></h2>"+
+                "<p style='text-align: center'>租房平均价格为" + res.cityRentprice + "元/月。预计占工资收入的" + res.rentPercent + "%。</p>";
 
            $("#container1").html(txt);
         }
