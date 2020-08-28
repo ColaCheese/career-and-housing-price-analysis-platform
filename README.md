@@ -11,7 +11,7 @@
 * **数据存储**:  存入阿里云(Ubuntu16.04)服务器上已经配置好的**MongoDB**数据库上
 * **数据数量**： 共计*117955*条数据。  
 
-<img src="./img/1.png" alt="新房数据爬取截图" />
+![新房数据爬取截图](https://www.yremp.live/images/2020/08/28/13c881.png)
 
 ### 2. 职业数据爬取
 
@@ -20,7 +20,8 @@
 * **数据存储**:  存入阿里云(Ubuntu16.04)服务器上已经配置好的**MongoDB**数据库上
 * **数据数量**： 各地职业需求数据共计*162*条,各地职业薪资数据共计*42784*条。
 
-<img src="./img/2.png" alt="职业数据爬取分析图" />
+<!-- <img src="./img/2.png" alt="职业数据爬取分析图" /> -->
+![职业数据爬取分析图](https://www.yremp.live/images/2020/08/28/2a8280.png)
 
 ### 3. 租房数据爬取
 
@@ -29,7 +30,7 @@
 * **数据存储**:  存入阿里云(Ubuntu16.04)服务器上已经配置好的**MongoDB**数据库上
 * **数据数量**： 共计*115149*条数据。
 
-<img src="./img/3.png" alt="职业数据爬取分析图" />
+![租房数据爬取截图](https://www.yremp.live/images/2020/08/28/34a789.png)
 
 ## 二、Spark大数据处理
 
@@ -55,7 +56,7 @@
 
 &emsp;&emsp;除了已经内置的包含了丰富功能的图表，**ECharts** 还提供了自定义系列，只需要传入一个**renderItem**函数，就可以从数据映射到任何你想要的图形，更棒的是这些都还能和已有的交互组件结合使用而不需要操心其它事情。
 
-<img src="./img/scatterGL.jpg" alt="echarts图demo" />
+![echarts图demo](https://www.yremp.live/images/2020/08/28/scatterGL67bc6.jpg)
 
 ### 2. 后端技术栈
 
@@ -73,6 +74,4 @@
 
 * 完全没有代码生成，也不需要XML配置
 
-<center>
-<img src="./img/4.png" alt="spring boot标签图" />
-</center>
+![spring boot标签图](https://www.yremp.live/images/2020/08/28/44a218.png)
